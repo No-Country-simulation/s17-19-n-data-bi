@@ -38,7 +38,7 @@ def get_promotion_suggestions(country, region, therapeutic_group):
         return ["Error generando las sugerencias."]
 
 # Cargar el logo
-st.sidebar.image('Pi.png', use_column_width=True)
+st.sidebar.image('/workspaces/s17-19-n-data-bi/streamlit_app/Pi.png', use_column_width=True)
 
 # Título en el menú lateral
 st.sidebar.title("Bienvenid@! Selecciona el insight:")
