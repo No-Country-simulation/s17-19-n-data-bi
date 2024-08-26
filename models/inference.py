@@ -27,9 +27,9 @@ def load_model(model_name):
 
     # Ajustar input_size basado en el modelo seleccionado
     if model_name == "stock":
-        input_size = 2  # Suponiendo que el modelo de stock tiene 2 características de entrada
+        input_size = 1995
     elif model_name == "prevision":
-        input_size = 4  # Por ejemplo, para previsión, si usas 4 características como país, región, etc.
+        input_size = 4
     elif model_name in ["marketing", "afinidad"]:
         return None  # Para marketing y afinidad, no se carga un modelo de PyTorch
     else:
