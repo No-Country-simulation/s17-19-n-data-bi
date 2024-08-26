@@ -1,0 +1,10 @@
+jupyterlab
+google-generativeai
+boto3
+streamlit
+pytorch
+scikit-learn
+pandas
+numpy
+dotenv
+requests
