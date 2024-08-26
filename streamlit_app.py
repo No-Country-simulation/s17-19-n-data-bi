@@ -9,10 +9,17 @@ from models.marketing_model import get_promotion_suggestions, configure_gemini_a
 from models.afinidad_model import get_related_products
 from dotenv import load_dotenv
 
-# Cargar las variables de entorno y configurar GenAI
+# Cargar las variables de entorno
 load_dotenv()
-gemini_api_key = os.getenv('GEMINI_API_KEY')
-configure_gemini_api(gemini_api_key)
+
+def configure_gemini_api():
+    gemini_api_key = os.getenv('GEMINI_API_KEY')
+    if not gemini_api_key:
+        st.error("No se encontró la API Key de Gemini. Por favor, verifica tu archivo .env.")
+        return
+    genai.configure(api_key=gemini_api_key)
+
+configure_gemini_api()
 
 # Cargar el logo
 st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
