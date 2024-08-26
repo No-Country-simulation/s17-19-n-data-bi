@@ -84,6 +84,13 @@ if prevision_consumo:
     if prevision_generativa:
         st.subheader('Previsión Con GenAI')
         st.write("Aquí se manejaría la lógica para la previsión generativa con GenAI.")
+                
+        st.write("Escribe una previsión de consumo que se desea saber según estación estival del año, contexto epidemiológico, país y región de ese país.")
+        
+        user_prompt = st.text_area("Escribe aquí una previsión de consumo que se desea saber según estación estival del año, contexto epidemiológico, país y región de ese país:", height=250)
+        
+        if st.button("Generar Previsión"):
+            st.write("Procesando tu solicitud...")
 
 if marketing_intelligence:
     st.title('Sistema de Recomendación de Precios y Combos')
