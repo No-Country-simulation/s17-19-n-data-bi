@@ -1,41 +1,29 @@
 # Código en proceso aún...
 
 import streamlit as st
-import boto3
-import json
+import torch
 import os
-import google.generativeai as genai
-from dotenv import load_dotenv
+from models.inference import predict, load_model  # Asegúrate de que la ruta a inference.py esté bien configurada
+from models.marketing_model import configure_gemini_api as configure_marketing_gemini_api, get_promotion_suggestions
+from models.afinidad_model import configure_gemini_api as configure_afinidad_gemini_api, get_related_products
 
+# Configurar la API de Gemini para marketing y afinidad de productos
+configure_marketing_gemini_api()
+configure_afinidad_gemini_api()
 
-# Cargar las variables de entorno desde el archivo .env
-load_dotenv()
-
-# Acceder a la clave API desde el archivo .env
-gemini_api_key = os.getenv('GEMINI_API_KEY')
-
-# Configurar la API generativa de Gemini
-genai.configure(api_key=gemini_api_key)
-
-# Función para generar sugerencias de promociones usando la API generativa
-def get_promotion_suggestions(country, region, therapeutic_group):
-    input_prompt = (
-        f"En el país {country}, región {region}, y para el grupo terapéutico {therapeutic_group}, "
-        "sugiere 5 promociones de marketing farmacéutico efectivas que podrían implementarse. "
-        "Las promociones deben estar alineadas con las tendencias actuales de mercado y ser aplicables en el contexto local. "
-        "Hacer una oferta de implementación de un precio sugerido en la moneda local del país seleccionado. "
-    )
-
-    try:
-        response = genai.generate_text(input_prompt)
-        if response and hasattr(response, 'text'):
-            suggestions = response.text.split('\n')
-            return suggestions[:5]  # Devolver solo las primeras 5 sugerencias
-        else:
-            return ["No se pudo generar una respuesta adecuada."]
-    except Exception as e:
-        st.error(f"Error al generar sugerencias: {e}")
-        return ["Error generando las sugerencias."]
+# Definir la arquitectura del modelo para Previsión Generativa
+class PrevisionModel(torch.nn.Module):
+    def __init__(self):
+        super(PrevisionModel, self).__init__()
+        self.fc1 = torch.nn.Linear(4, 64)  # Ajusta las dimensiones según tu entrada real
+        self.fc2 = torch.nn.Linear(64, 32)
+        self.fc3 = torch.nn.Linear(32, 1)
+    
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        x = torch.sigmoid(self.fc3(x))
+        return x
 
 # Cargar el logo
 st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
@@ -56,8 +44,6 @@ button_style = """
     }
     </style>
 """
-
-# Aplicar el estilo a los botones
 st.markdown(button_style, unsafe_allow_html=True)
 
 # Crear botones en el menú lateral
@@ -65,74 +51,77 @@ gestion_stocks = st.sidebar.button('GESTIÓN DE STOCKS')
 prevision_consumo = st.sidebar.button('PREVISIÓN DE CONSUMO')
 marketing_intelligence = st.sidebar.button('MARKETING INTELLIGENCE')
 afinidad_productos = st.sidebar.button('AFINIDAD DE PRODUCTOS')
-demanda_pcb = st.sidebar.button('DEMANDA DE PCB & NO PCB')
 
-# Configura el cliente de SageMaker
-sagemaker_client = boto3.client('sagemaker-runtime', region_name='us-west-2')
-
-# Nombre del endpoint que obtuviste después de desplegar el modelo en SageMaker
-endpoint_name = 'my-endpoint-name'  # Reemplaza con el nombre real de tu endpoint
-
-# Contenido para GESTIÓN DE STOCKS
+# Lógica para cada botón seleccionado
 if gestion_stocks:
-    st.title('Verificación de Stock en Sucursales')
+    # Lógica para Gestión de Stocks
+    model_name = "stock"
+    model = load_model(model_name)
+    if model:
+        sucursal_id = st.text_input("Ingrese el ID de la sucursal")
+        skuagr_2 = st.text_input("Ingrese el SKU del producto")
 
-    # Input de usuario para seleccionar la sucursal y el producto
-    sucursal_id = st.text_input("Ingrese el ID de la sucursal")
-    skuagr_2 = st.text_input("Ingrese el SKU del producto")
+        if st.button('Verificar Stock'):
+            try:
+                input_data = torch.tensor([float(sucursal_id), float(skuagr_2)])  # Ajusta los datos según sea necesario
+                result = predict(model, input_data)
+                st.write(f'Resultado de la predicción: {result}')
+            except ValueError:
+                st.error("Por favor ingrese valores numéricos válidos.")
 
-    # Cuando el usuario hace clic en el botón, enviar los datos al endpoint de SageMaker
-    if st.button('Verificar Stock'):
-        # Crear el payload que se enviará al endpoint
-        payload = json.dumps({
-            'sucursal_id': sucursal_id,
-            'skuagr_2': skuagr_2
-        })
+elif prevision_consumo:
+    st.sidebar.subheader("Selecciona el método de previsión:")
+    prevision_basada_datos = st.sidebar.button('PREVISIÓN BASADA EN DATOS')
+    prevision_generativa = st.sidebar.button('PREVISIÓN CON GenAI')
 
-        # Llamar al endpoint de SageMaker
-        response = sagemaker_client.invoke_endpoint(
-            EndpointName=endpoint_name,
-            ContentType='application/json',
-            Body=payload
-        )
+    if prevision_basada_datos:
+        st.title('Previsión Basada en Datos')
+        # Aquí integras las visualizaciones de Power BI
+        st.markdown("[Visualización de Power BI](URL_DE_TU_POWER_BI)")
 
-        # Leer la respuesta
-        result = json.loads(response['Body'].read().decode())
-        st.write(f'Resultado de la predicción: {result}')
+    elif prevision_generativa:
+        st.title('Previsión Con GenAI')
+        model_name = "prevision"
+        model = load_model(model_name)
 
-#elif prevision_consumo:
-#    st.title('Previsión de Consumo')
-#    st.write('Aquí puedes implementar la lógica para la previsión de consumo.')
+        if model:
+            country = st.text_input("Ingrese el país")
+            region = st.text_input("Ingrese la región / estado / provincia")
+            context = st.text_input("Contexto epidemiológico")
+            season = st.text_input("Época del año")
 
-# Configura el estado de la sesión
-if 'country' not in st.session_state:
-    st.session_state['country'] = ''
-if 'region' not in st.session_state:
-    st.session_state['region'] = ''
-if 'therapeutic_group' not in st.session_state:
-    st.session_state['therapeutic_group'] = ''
+            if st.button('Generar Previsión'):
+                try:
+                    input_data = torch.tensor([float(country), float(region), float(context), float(season)])  # Ajusta según corresponda
+                    result = predict(model, input_data)
+                    st.write(f'Resultado de la previsión: {result}')
+                except ValueError:
+                    st.error("Por favor ingrese valores numéricos válidos.")
+                # Lógica adicional con la API de Gemini
+                input_prompt = (
+                    f"En el país {country}, región {region}, con un contexto epidemiológico de {context}, "
+                    f"dado que estamos en la {season}, ¿qué previsiones de consumo se deberían tomar en cuenta?"
+                )
+                response = genai.generate_text(input_prompt)
+                if response and hasattr(response, 'text'):
+                    st.write("Previsión GenAI sugerida:")
+                    st.write(response.text)
+                else:
+                    st.warning("No se pudo generar una respuesta adecuada.")
 
-# Contenido para cada botón seleccionado
-if marketing_intelligence:
+elif marketing_intelligence:
     st.title('Marketing Intelligence')
 
-    # Entradas de usuario con manejo de estado
-    st.session_state['country'] = st.text_input('Ingrese el país:', st.session_state['country'])
-    st.session_state['region'] = st.text_input('Ingrese la región / estado / provincia:', st.session_state['region'])
-    st.session_state['therapeutic_group'] = st.text_input('Ingrese el grupo terapéutico:', st.session_state['therapeutic_group'])
+    # Entradas de usuario
+    country = st.text_input('Ingrese el país:')
+    region = st.text_input('Ingrese la región / estado / provincia:')
+    therapeutic_group = st.text_input('Ingrese el grupo terapéutico:')
 
-    # Botón para obtener sugerencias de promociones
     if st.button('Obtener Sugerencias de Promociones'):
-        if not st.session_state['country'] or not st.session_state['region'] or not st.session_state['therapeutic_group']:
+        if not country or not region or not therapeutic_group:
             st.warning("Por favor, ingrese todos los campos requeridos.")
         else:
-            suggestions = get_promotion_suggestions(
-                st.session_state['country'], 
-                st.session_state['region'], 
-                st.session_state['therapeutic_group']
-            )
-            
-            # Mostrar las sugerencias
+            suggestions = get_promotion_suggestions(country, region, therapeutic_group)
             if suggestions:
                 st.subheader('Sugerencias de Promociones')
                 for i, suggestion in enumerate(suggestions, 1):
@@ -140,10 +129,20 @@ if marketing_intelligence:
             else:
                 st.warning("No se encontraron sugerencias para las opciones seleccionadas.")
 
-#elif afinidad_productos:
-#    st.title('Afinidad de Productos')
-#   st.write('Aquí puedes implementar la lógica para afinidad de productos.')
+elif afinidad_productos:
+    st.title('Afinidad de Productos')
 
-#elif demanda_pcb:
-#    st.title('Demanda de PCB & NO PCB')
-#    st.write('Aquí puedes implementar la lógica para demanda de PCB & NO PCB.')
+    # Entrada de usuario
+    main_product = st.text_input('Ingrese el nombre del producto o categoría principal:')
+
+    if st.button('Buscar Productos Relacionados'):
+        if not main_product:
+            st.warning("Por favor, ingrese un producto o categoría.")
+        else:
+            related_products = get_related_products(main_product)
+            if related_products:
+                st.subheader(f'Productos relacionados con {main_product}')
+                for i, product in enumerate(related_products, 1):
+                    st.write(f"{i}. {product}")
+            else:
+                st.warning("No se encontraron productos relacionados.")
