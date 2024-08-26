@@ -73,32 +73,32 @@ if prevision_consumo:
         st.subheader('Previsión Basada en Datos')
         st.markdown("[Visualización de Power BI](URL_DE_TU_POWER_BI)")
 
-if prevision_generativa:
-    st.subheader('Previsión Con GenAI')
-    st.write("Aquí se manejaría la lógica para la previsión generativa con GenAI.")
+    if prevision_generativa:
+        st.subheader('Previsión Con GenAI')
+        st.write("Aquí se manejaría la lógica para la previsión generativa con GenAI.")
+        
+        st.write("Escribe una previsión de consumo que se desea saber según estación del año, contexto epidemiológico, país y región de ese país.")
+        
+        user_prompt = st.text_area("Escribe aquí la previsión de consumo que deseas saber:", height=250)
+        
+        if st.button("Generar Previsión"):
+            if user_prompt.strip() == "":
+                st.warning("Por favor, ingresa una consulta en el área de texto antes de generar la previsión.")
+            else:
+                st.write("Procesando tu solicitud...")
     
-    st.write("Escribe una previsión de consumo que se desea saber según estación del año, contexto epidemiológico, país y región de ese país.")
+                try:
+                    # Usar la función de generación de texto de GenAI
+                    response = genai.generate_text(prompt=user_prompt)
+                    
+                    if response and hasattr(response, 'text'):
+                        st.write("Previsión generada con GenAI:")
+                        st.write(response.text)
+                    else:
+                        st.warning("No se pudo generar una previsión adecuada. Inténtalo de nuevo.")
     
-    user_prompt = st.text_area("Escribe aquí la previsión de consumo que deseas saber:", height=250)
-    
-    if st.button("Generar Previsión"):
-        if user_prompt.strip() == "":
-            st.warning("Por favor, ingresa una consulta en el área de texto antes de generar la previsión.")
-        else:
-            st.write("Procesando tu solicitud...")
-
-            try:
-                # Usar la función de generación de texto de GenAI
-                response = genai.generate_text(prompt=user_prompt)
-                
-                if response and hasattr(response, 'text'):
-                    st.write("Previsión generada con GenAI:")
-                    st.write(response.text)
-                else:
-                    st.warning("No se pudo generar una previsión adecuada. Inténtalo de nuevo.")
-
-            except Exception as e:
-                st.error(f"Error al generar la previsión: {e}")
+                except Exception as e:
+                    st.error(f"Error al generar la previsión: {e}")
 
 if marketing_intelligence:
     st.title('Sistema de Recomendación de Precios y Combos')
