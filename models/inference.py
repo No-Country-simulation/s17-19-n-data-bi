@@ -40,7 +40,7 @@ def load_model(model_name):
 
     model = BaseModel(input_size)
     if os.path.exists(model_paths[model_name]):
-        model.load_state_dict(torch.load(model_paths[model_name]))
+        model.load_state_dict(torch.load(model_paths[model_name], weights_only=True))
         model.eval()
         return model
     else:
