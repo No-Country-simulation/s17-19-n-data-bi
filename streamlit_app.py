@@ -6,6 +6,7 @@ import os
 from models.inference import predict, load_model  # Asegúrate de que la ruta a inference.py esté bien configurada
 from models.marketing_model import configure_gemini_api as configure_marketing_gemini_api, get_promotion_suggestions
 from models.afinidad_model import configure_gemini_api as configure_afinidad_gemini_api, get_related_products
+import google.generativeai as genai
 
 # Configurar la API de Gemini para marketing y afinidad de productos
 configure_marketing_gemini_api()
