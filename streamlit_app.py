@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 # Cargar las variables de entorno y configurar GenAI
 load_dotenv()
 gemini_api_key = os.getenv('GEMINI_API_KEY')
-configure_gemini_api()
+configure_gemini_api(gemini_api_key)
 
 # Cargar el logo
 st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
@@ -28,14 +28,6 @@ button_style = """
         height: 50px;
         background-color: #96ffae;
         color: dark blue;
-        font-size: 16px;
-        border-radius: 10px;
-    }
-    .dark-blue-button > button {
-        width: 100%;
-        height: 50px;
-        background-color: dark blue;
-        color: white;
         font-size: 16px;
         border-radius: 10px;
     }
@@ -73,24 +65,40 @@ if prevision_consumo:
     
     col1, col2 = st.columns(2)
     with col1:
-        prevision_basada_datos = st.button('PREVISIÓN BASADA EN DATOS', key="btn_prevision_basada_datos", args="dark-blue-button")
+        prevision_basada_datos = st.button('PREVISIÓN BASADA EN DATOS', key="btn_prevision_basada_datos")
     with col2:
-        prevision_generativa = st.button('PREVISIÓN CON GenAI', key="btn_prevision_generativa", args="dark-blue-button")
+        prevision_generativa = st.button('PREVISIÓN CON GenAI', key="btn_prevision_generativa")
 
     if prevision_basada_datos:
         st.subheader('Previsión Basada en Datos')
         st.markdown("[Visualización de Power BI](URL_DE_TU_POWER_BI)")
 
-    if prevision_generativa:
-        st.subheader('Previsión Con GenAI')
-        st.write("Aquí se manejaría la lógica para la previsión generativa con GenAI.")
-                
-        st.write("Escribe una previsión de consumo que se desea saber según estación estival del año, contexto epidemiológico, país y región de ese país.")
-        
-        user_prompt = st.text_area("Escribe aquí una previsión de consumo que se desea saber según estación estival del año, contexto epidemiológico, país y región de ese país:", height=250)
-        
-        if st.button("Generar Previsión"):
+if prevision_generativa:
+    st.subheader('Previsión Con GenAI')
+    st.write("Aquí se manejaría la lógica para la previsión generativa con GenAI.")
+    
+    st.write("Escribe una previsión de consumo que se desea saber según estación del año, contexto epidemiológico, país y región de ese país.")
+    
+    user_prompt = st.text_area("Escribe aquí la previsión de consumo que deseas saber:", height=250)
+    
+    if st.button("Generar Previsión"):
+        if user_prompt.strip() == "":
+            st.warning("Por favor, ingresa una consulta en el área de texto antes de generar la previsión.")
+        else:
             st.write("Procesando tu solicitud...")
+
+            try:
+                # Usar la función de generación de texto de GenAI
+                response = genai.generate_text(prompt=user_prompt)
+                
+                if response and hasattr(response, 'text'):
+                    st.write("Previsión generada con GenAI:")
+                    st.write(response.text)
+                else:
+                    st.warning("No se pudo generar una previsión adecuada. Inténtalo de nuevo.")
+
+            except Exception as e:
+                st.error(f"Error al generar la previsión: {e}")
 
 if marketing_intelligence:
     st.title('Sistema de Recomendación de Precios y Combos')
