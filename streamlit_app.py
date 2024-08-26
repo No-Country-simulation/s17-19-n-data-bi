@@ -86,7 +86,7 @@ if prevision_consumo:
         st.write("Aquí se manejaría la lógica para la previsión generativa con GenAI.")
 
 if marketing_intelligence:
-    st.title('Marketing Intelligence')
+    st.title('Sistema de Recomendación de Precios y Combos')
     country = st.text_input('Ingrese el país:')
     region = st.text_input('Ingrese la región / estado / provincia:')
     therapeutic_group = st.text_input('Ingrese el grupo terapéutico:')
@@ -101,10 +101,10 @@ if marketing_intelligence:
             st.warning("No se encontraron sugerencias para las opciones seleccionadas.")
 
 if afinidad_productos:
-    st.title("Afinidad de Productos")
+    st.title("Posibles Demandas de Productos Relacionados")
     prompt = st.text_input("Ingrese un producto o categoría para ver productos relacionados")
 
-    if st.button("Generar afinidad de productos"):
+    if st.button("Generar Afinidad de Productos"):
         if prompt:
             suggestions = get_related_products(prompt)
             if suggestions:
