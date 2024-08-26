@@ -69,9 +69,8 @@ if gestion_stocks:
                 st.error(f"Error al realizar la predicción: {e}")
 
 if prevision_consumo:
-    st.title("Previsión de Consumo")
-    st.subheader("Selecciona el método de previsión:")
-
+    st.title("Selecciona el Método de Previsión")
+    
     col1, col2 = st.columns(2)
     with col1:
         prevision_basada_datos = st.button('PREVISIÓN BASADA EN DATOS', key="btn_prevision_basada_datos", args="dark-blue-button")
