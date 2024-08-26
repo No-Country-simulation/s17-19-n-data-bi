@@ -1,14 +1,13 @@
 import torch
 import torch.nn as nn
-from sagemaker_inference import content_types, decoder, encoder, default_inference_handler
 import json
 
 class StockModel(nn.Module):
-    def __init__(self):
+    def __init__(self, input_size, hidden_size1, hidden_size2, output_size):
         super(StockModel, self).__init__()
-        self.fc1 = nn.Linear(996, 64)
-        self.fc2 = nn.Linear(64, 32)
-        self.fc3 = nn.Linear(32, 1)
+        self.fc1 = nn.Linear(input_size, hidden_size1)
+        self.fc2 = nn.Linear(hidden_size1, hidden_size2)
+        self.fc3 = nn.Linear(hidden_size2, output_size)
     
     def forward(self, x):
         x = torch.relu(self.fc1(x))
@@ -16,9 +15,10 @@ class StockModel(nn.Module):
         x = torch.sigmoid(self.fc3(x))
         return x
 
-def model_fn(model_dir):
-    model = StockModel()
-    model.load_state_dict(torch.load(model_dir + '/stock_verification_model.pth'))
+def model_fn(model_dir, model_name):
+    model_path = f"{model_dir}/{model_name}"
+    model = StockModel(input_size=996, hidden_size1=64, hidden_size2=32, output_size=1)
+    model.load_state_dict(torch.load(model_path))
     model.eval()
     return model
 
@@ -29,4 +29,8 @@ def input_fn(request_body, content_type):
 
 def predict_fn(input_data, model):
     with torch.no_grad():
-        return model(input_data).item()
+        prediction = model(input_data)
+    return prediction.item()
+
+def output_fn(prediction, content_type):
+    return json.dumps({'prediction': prediction})
