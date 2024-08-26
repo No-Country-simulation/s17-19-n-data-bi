@@ -3,23 +3,24 @@
 import streamlit as st
 import torch
 import os
-from models.inference import predict, load_model
-from models.marketing_model import configure_gemini_api, get_promotion_suggestions
-from dotenv import load_dotenv
 import google.generativeai as genai
+from models.inference import load_model, predict
+from models.marketing_model import get_promotion_suggestions, configure_gemini_api
+from models.afinidad_model import get_related_products
+from dotenv import load_dotenv
 
-# Load environment variables
+# Cargar las variables de entorno y configurar GenAI
 load_dotenv()
 gemini_api_key = os.getenv('GEMINI_API_KEY')
-genai.configure(api_key=gemini_api_key)
+configure_gemini_api()
 
-# Load the logo
+# Cargar el logo
 st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
 
-# Sidebar title
+# Título en el menú lateral
 st.sidebar.title("Bienvenid@! Selecciona el insight:")
 
-# Apply CSS style to buttons
+# Aplicar estilo CSS a los botones
 button_style = """
     <style>
     .stButton > button {
@@ -30,22 +31,28 @@ button_style = """
         font-size: 16px;
         border-radius: 10px;
     }
+    .dark-blue-button > button {
+        width: 100%;
+        height: 50px;
+        background-color: dark blue;
+        color: white;
+        font-size: 16px;
+        border-radius: 10px;
+    }
     </style>
 """
 st.markdown(button_style, unsafe_allow_html=True)
 
-# Create buttons in the sidebar
+# Crear botones en el menú lateral
 gestion_stocks = st.sidebar.button('GESTIÓN DE STOCKS')
 prevision_consumo = st.sidebar.button('PREVISIÓN DE CONSUMO')
 marketing_intelligence = st.sidebar.button('MARKETING INTELLIGENCE')
 afinidad_productos = st.sidebar.button('AFINIDAD DE PRODUCTOS')
-demanda_pcb = st.sidebar.button('DEMANDA DE PCB & NO PCB')
 
-# Handling the model selection and UI display
+# Gestionar la lógica de cada botón
 if gestion_stocks:
     st.title("Verificación de Stock en Sucursales")
-    model_name = "stock"
-    model = load_model(model_name)
+    model = load_model("stock")
 
     if model:
         sucursal_id = st.text_input("Ingrese el ID de la sucursal")
@@ -61,76 +68,43 @@ if gestion_stocks:
             except Exception as e:
                 st.error(f"Error al realizar la predicción: {e}")
 
-elif prevision_consumo:
-    st.sidebar.subheader("Selecciona el método de previsión:")
-    prevision_basada_datos = st.sidebar.button('PREVISIÓN BASADA EN DATOS')
-    prevision_generativa = st.sidebar.button('PREVISIÓN CON GenAI')
+if prevision_consumo:
+    st.title("Previsión de Consumo")
+    st.subheader("Selecciona el método de previsión:")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        prevision_basada_datos = st.button('PREVISIÓN BASADA EN DATOS', key="btn_prevision_basada_datos", args="dark-blue-button")
+    with col2:
+        prevision_generativa = st.button('PREVISIÓN CON GenAI', key="btn_prevision_generativa", args="dark-blue-button")
 
     if prevision_basada_datos:
-        st.title('Previsión Basada en Datos')
+        st.subheader('Previsión Basada en Datos')
         st.markdown("[Visualización de Power BI](URL_DE_TU_POWER_BI)")
 
-    elif prevision_generativa:
-        st.title('Previsión Con GenAI')
-        model_name = "prevision"
-        model = load_model(model_name)
+    if prevision_generativa:
+        st.subheader('Previsión Con GenAI')
+        st.write("Aquí se manejaría la lógica para la previsión generativa con GenAI.")
 
-        if model:
-            country = st.text_input("Ingrese el país")
-            region = st.text_input("Ingrese la región / estado / provincia")
-            context = st.text_input("Contexto epidemiológico")
-            season = st.text_input("Época del año")
-
-            if st.button('Generar Previsión'):
-                try:
-                    input_data = torch.tensor([float(country), float(region), float(context), float(season)])
-                    result = predict(model, input_data)
-                    st.write(f'Resultado de la previsión: {result}')
-                except ValueError:
-                    st.error("Por favor ingrese valores numéricos válidos.")
-                except Exception as e:
-                    st.error(f"Error al realizar la previsión: {e}")
-
-                # Generative AI part
-                input_prompt = (
-                    f"En el país {country}, región {region}, con un contexto epidemiológico de {context}, "
-                    f"dado que estamos en la {season}, ¿qué previsiones de consumo se deberían tomar en cuenta?"
-                )
-                try:
-                    response = genai.generate_text(input_prompt)
-                    if response and hasattr(response, 'text'):
-                        st.write("Previsión GenAI sugerida:")
-                        st.write(response.text)
-                    else:
-                        st.warning("No se pudo generar una respuesta adecuada.")
-                except Exception as e:
-                    st.error(f"Error al generar previsión con GenAI: {e}")
-
-elif marketing_intelligence:
+if marketing_intelligence:
     st.title('Marketing Intelligence')
-    configure_gemini_api()
-
     country = st.text_input('Ingrese el país:')
     region = st.text_input('Ingrese la región / estado / provincia:')
     therapeutic_group = st.text_input('Ingrese el grupo terapéutico:')
 
     if st.button('Obtener Sugerencias de Promociones'):
-        if not country or not region or not therapeutic_group:
-            st.warning("Por favor, ingrese todos los campos requeridos.")
+        suggestions = get_promotion_suggestions(country, region, therapeutic_group)
+        if suggestions:
+            st.subheader('Sugerencias de Promociones')
+            for i, suggestion in enumerate(suggestions, 1):
+                st.write(f"Promoción {i}: {suggestion}")
         else:
-            suggestions = get_promotion_suggestions(country, region, therapeutic_group)
-            if suggestions:
-                st.subheader('Sugerencias de Promociones')
-                for i, suggestion in enumerate(suggestions, 1):
-                    st.write(f"Promoción {i}: {suggestion}")
-            else:
-                st.warning("No se encontraron sugerencias para las opciones seleccionadas.")
+            st.warning("No se encontraron sugerencias para las opciones seleccionadas.")
 
-elif afinidad_productos:
+if afinidad_productos:
     st.title("Afinidad de Productos")
-    from models.afinidad_model import get_related_products
-
     prompt = st.text_input("Ingrese un producto o categoría para ver productos relacionados")
+
     if st.button("Generar afinidad de productos"):
         if prompt:
             suggestions = get_related_products(prompt)
