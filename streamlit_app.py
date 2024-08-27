@@ -93,15 +93,18 @@ elif st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
         
         user_prompt = st.text_area("PROMPT:", height=250)
         
-        if st.button("Generar Previsión"):
+        # Añadimos una clave para asegurar que se retiene el valor al recargar
+        if st.button("Generar Previsión", key='generate'):
             if user_prompt.strip() == "":
                 st.warning("Por favor, ingresa una consulta en el área de texto antes de generar la previsión.")
             else:
                 st.write("Procesando tu solicitud...")
     
                 try:
+                    # Asumimos que genai.generate_text es una función síncrona que retorna un objeto con el atributo 'text'
                     response = genai.generate_text(prompt=user_prompt)
                     
+                    # Verificamos que la respuesta no esté vacía y tenga el atributo 'text'
                     if response and hasattr(response, 'text'):
                         st.write("Previsión generada con GenAI:")
                         st.write(response.text)
