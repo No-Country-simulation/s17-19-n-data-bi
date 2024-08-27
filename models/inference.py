@@ -48,3 +48,12 @@ def load_model(model_name):
         return model
     else:
         raise FileNotFoundError(f"No se encontró el archivo de modelo: {model_path}")
+
+def predict(model, input_data):
+    if model is None:
+        raise ValueError("El modelo no está cargado correctamente.")
+    
+    input_tensor = torch.tensor(input_data.values, dtype=torch.float32)
+    with torch.no_grad():
+        output = model(input_tensor)
+    return output.item()
