@@ -9,7 +9,7 @@ def stock_verification():
     if model:
         # Definir un formulario con un botón de submit
         with st.form(key='stock_form'):
-            sucursal_id = st.text_input("Ingrese el ID de la sucursal")
+            id_sucursal = st.text_input("Ingrese el ID de la sucursal")
             skuagr_2 = st.text_input("Ingrese el SKU del producto")
 
             # Botón para enviar el formulario
@@ -18,7 +18,7 @@ def stock_verification():
         # Solo ejecutar la predicción si se presiona el botón de submit
         if submit_button:
             try:
-                input_data = torch.tensor([float(sucursal_id), float(skuagr_2)])
+                input_data = torch.tensor([float(id_sucursal), float(skuagr_2)])
                 result = predict(model, input_data)
                 st.write(f'Resultado de la petición: {result}')
             except ValueError:
