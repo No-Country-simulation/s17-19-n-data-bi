@@ -1,3 +1,4 @@
+import streamlit as st
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
@@ -29,3 +30,23 @@ def get_related_products(main_product, num_suggestions=5):
             return ["No se pudo generar una respuesta adecuada."]
     except Exception as e:
         return [f"Error al generar productos relacionados: {e}"]
+
+# Streamlit app
+configure_gemini_api()
+
+st.title("Sugerencias de Productos Relacionados")
+
+# Usar un formulario para evitar recargas al cambiar de campo
+with st.form(key='related_products_form'):
+    main_product = st.text_input("Producto o Categoría Principal")
+    num_suggestions = st.number_input("Número de Sugerencias", min_value=1, max_value=10, value=5)
+    
+    # Botón para enviar el formulario
+    submit_button = st.form_submit_button(label='Obtener Productos Relacionados')
+
+# Solo generar sugerencias si se ha enviado el formulario
+if submit_button:
+    suggestions = get_related_products(main_product, num_suggestions)
+    st.write("Productos Relacionados Sugeridos:")
+    for i, suggestion in enumerate(suggestions, start=1):
+        st.write(f"{i}. {suggestion}")
