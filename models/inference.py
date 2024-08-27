@@ -50,10 +50,21 @@ def load_model(model_name):
         raise FileNotFoundError(f"No se encontró el archivo de modelo: {model_path}")
 
 def predict(model, input_data):
-    if model is None:
-        raise ValueError("El modelo no está cargado correctamente.")
-    
-    input_tensor = torch.tensor(input_data.values, dtype=torch.float32)
-    with torch.no_grad():
-        output = model(input_tensor)
-    return output.item()
+    try:
+        # Verificar que input_data no esté vacío
+        if input_data.empty:
+            raise ValueError("El input_data está vacío. No se puede hacer la predicción.")
+
+        # Convertir los datos de entrada en un tensor
+        input_tensor = torch.tensor(input_data.values, dtype=torch.float32)
+
+        # Realizar la predicción utilizando el modelo
+        prediction = model(input_tensor)
+
+        # Retornar el resultado de la predicción
+        return prediction
+
+    except Exception as e:
+        # Manejar el error e imprimir detalles para depuración
+        print(f"Error durante la predicción: {e}")
+        raise
