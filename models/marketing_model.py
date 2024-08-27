@@ -43,27 +43,51 @@ model = genai.GenerativeModel(
 )
 
 def get_promotion_suggestions(country, region, therapeutic_group):
-    prompt = f"Genera hasta 10 sugerencias de promociones específicas y de alta calidad para {therapeutic_group} en {country}, {region}."
+    prompt = f"Genera 10 sugerencias de promociones específicas para el grupo terapéutico de {therapeutic_group} en {country}, {region}. Asegúrate de que cada sugerencia esté bien estructurada, clara y con un valor agregado evidente."
     
     try:
         response = model.generate_content([prompt])
         
-        # Verificar si hay una respuesta válida
         if response and hasattr(response, 'text'):
-            # Asumimos que cada sugerencia de promoción está en una línea nueva.
             suggestions = response.text.splitlines()
             
-            # Filtrar las promociones vacías y limitar a 10 sugerencias
-            filtered_suggestions = [s for s in suggestions if s.strip()]
-            return filtered_suggestions[:10]
+            # Filtrar líneas vacías y asegurar que cada sugerencia tenga un formato correcto
+            filtered_suggestions = [s.strip() for s in suggestions if s.strip()]
+            structured_suggestions = []
+
+            current_promotion = []
+            for suggestion in filtered_suggestions:
+                if suggestion.startswith(("*", "Promoción:", "Público objetivo:", "Valor agregado:")):
+                    current_promotion.append(suggestion)
+                else:
+                    if current_promotion:
+                        structured_suggestions.append("\n".join(current_promotion))
+                    current_promotion = [suggestion]
+            if current_promotion:
+                structured_suggestions.append("\n".join(current_promotion))
+
+            return structured_suggestions[:10]
         
         elif response and hasattr(response, 'generated_text'):
             suggestions = response.generated_text.splitlines()
-            filtered_suggestions = [s for s in suggestions if s.strip()]
-            return filtered_suggestions[:10]
+            filtered_suggestions = [s.strip() for s in suggestions if s.strip()]
+            structured_suggestions = []
+
+            current_promotion = []
+            for suggestion in filtered_suggestions:
+                if suggestion.startswith(("*", "Promoción:", "Público objetivo:", "Valor agregado:")):
+                    current_promotion.append(suggestion)
+                else:
+                    if current_promotion:
+                        structured_suggestions.append("\n".join(current_promotion))
+                    current_promotion = [suggestion]
+            if current_promotion:
+                structured_suggestions.append("\n".join(current_promotion))
+
+            return structured_suggestions[:10]
         
         else:
-            return ["No se pudieron generar sugerencias."]  # Mensaje predeterminado si no hay sugerencias
+            return ["No se pudieron generar sugerencias."]
         
     except Exception as e:
         raise RuntimeError(f"Error al generar las sugerencias: {e}")
