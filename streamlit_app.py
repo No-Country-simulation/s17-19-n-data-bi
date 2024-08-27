@@ -144,7 +144,7 @@ if st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
         st.subheader('Previsión Basada en Datos')
         st.markdown("[Visualización de Power BI](URL_DE_TU_POWER_BI)")
 
-if prevision_generativa:
+    if prevision_generativa:
         st.session_state['show_prevision_generativa'] = True
 
     if st.session_state['show_prevision_generativa']:
