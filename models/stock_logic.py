@@ -52,13 +52,9 @@ def stock_verification():
                 (stock_data['skuagr_2'] == skuagr_2)
             ]
 
-            # Guardar los resultados en session state
-            st.form['filtered_data'] = filtered_data
-
-    # Mostrar los resultados si están disponibles
-    if st.session_state['filtered_data'] is not None:
-        if not st.session_state['filtered_data'].empty:
-            st.write("Resultados de la consulta:")
-            st.write(st.session_state['filtered_data'])
-        else:
-            st.write("No se encontraron registros para la sucursal y SKU proporcionados.")
+            # Mostrar resultados
+            if not filtered_data.empty:
+                st.write("Resultados de la consulta:")
+                st.write(filtered_data)
+            else:
+                st.write("No se encontraron registros para la sucursal y SKU proporcionados.")
