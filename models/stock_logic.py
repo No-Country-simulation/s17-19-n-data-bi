@@ -1,3 +1,4 @@
+import pandas as pd
 import streamlit as st
 import torch
 from models.inference import load_model, predict
