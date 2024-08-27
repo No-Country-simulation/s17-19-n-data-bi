@@ -12,14 +12,19 @@ from dotenv import load_dotenv
 # Cargar las variables de entorno
 load_dotenv()
 
-def configure_gemini_api():
-    gemini_api_key = os.getenv('GEMINI_API_KEY')
-    if not gemini_api_key:
-        st.error("No se encontró la API Key de Gemini. Por favor, verifica tu archivo .env.")
-        return
-    genai.configure(api_key=gemini_api_key)
+# Obtener la API Key de Gemini
+gemini_api_key = os.getenv('GEMINI_API_KEY')
 
-configure_gemini_api()
+# Verificar si la API Key de Gemini se encontró y configurarla
+if gemini_api_key:
+    try:
+        genai.configure(api_key=gemini_api_key)
+        st.success("API de Gemini configurada correctamente.")
+    except Exception as e:
+        st.error(f"Error al configurar la API de Gemini: {e}")
+else:
+    st.error("No se encontró la API Key de Gemini. Por favor, verifica tu archivo .env.")
+
 
 # Cargar el logo
 st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
