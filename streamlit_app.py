@@ -181,6 +181,7 @@ if st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
 
 elif st.session_state['selected_button'] == 'MARKETING INTELLIGENCE':
     st.title('Sistema de Recomendación de Precios y Combos')
+    
     with st.form(key='marketing_form'):
         country = st.text_input('Ingrese el país:')
         region = st.text_input('Ingrese la región / estado / provincia:')
@@ -195,12 +196,14 @@ elif st.session_state['selected_button'] == 'MARKETING INTELLIGENCE':
         else:
             try:
                 suggestions = get_promotion_suggestions(country, region, therapeutic_group)
+                
                 if suggestions:
                     st.subheader('Sugerencias de Promociones')
                     for i, suggestion in enumerate(suggestions, 1):
                         st.write(f"Promoción {i}: {suggestion}")
                 else:
                     st.warning("No se encontraron sugerencias para las opciones seleccionadas.")
+            
             except Exception as e:
                 st.error(f"Se produjo un error al obtener las sugerencias: {e}")
 
