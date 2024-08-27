@@ -43,50 +43,21 @@ model = genai.GenerativeModel(
 )
 
 def get_promotion_suggestions(country, region, therapeutic_group):
-    prompt = f"Genera 10 sugerencias de promociones específicas para el grupo terapéutico de {therapeutic_group} en {country}, {region}. Cada promoción debe incluir un título, un ítem de descripción y un ítem de valor agregado. Debe respetar una estructura clara y concisa."
+    prompt = f"Genera 10 sugerencias de promociones para el grupo terapéutico de {therapeutic_group} en {country}, {region}. Responde con una lista de promociones sin necesidad de seguir una estructura estricta."
 
     try:
         response = model.generate_content([prompt])
 
         if response and hasattr(response, 'text'):
-            suggestions = response.text.splitlines()
-
-            # Inicializar una lista para almacenar las promociones formateadas
-            formatted_suggestions = []
-            current_promotion = ""
-            in_title_block = False
-
-            for line in suggestions:
-                stripped_line = line.strip()
-
-                # Detectar si estamos en el bloque del título general
-                if stripped_line.startswith(" "):
-                    formatted_suggestions.append(stripped_line)
-                elif stripped_line.startswith("1."):
-                    # Fin del bloque de título general, inicio de las promociones
-                    formatted_suggestions.append("\nGrupo Terapéutico de " + therapeutic_group + f" - {region}, {country}:\n")
-                    current_promotion = f"{stripped_line[0]}: {stripped_line[3:].strip()}"
-                elif stripped_line and stripped_line[0].isdigit() and "." in stripped_line[1:3]:
-                    # Comienza una nueva promoción
-                    if current_promotion:
-                        formatted_suggestions.append(current_promotion.strip())
-                    current_promotion = f"{stripped_line[:2].strip()}: {stripped_line[3:].strip()}"
-                elif stripped_line.startswith("-") or stripped_line.startswith("*"):
-                    # Continuación de la descripción o valor agregado
-                    current_promotion += f"\n{stripped_line}"
-                else:
-                    # Continuación de la línea anterior
-                    current_promotion += f" {stripped_line}"
-
-            # Añadir la última promoción a la lista
-            if current_promotion:
-                formatted_suggestions.append(current_promotion.strip())
-
+            # Dividir la respuesta en líneas, cada línea sería una sugerencia
+            suggestions = response.text.strip().splitlines()
+            
             # Devolver sólo las 10 primeras sugerencias
-            return formatted_suggestions[:10]
+            return suggestions[:10] if len(suggestions) > 10 else suggestions
 
         else:
             return ["No se pudieron generar sugerencias."]
     
     except Exception as e:
         raise RuntimeError(f"Error al generar las sugerencias: {e}")
+        
