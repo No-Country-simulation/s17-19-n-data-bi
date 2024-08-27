@@ -6,6 +6,7 @@ import os
 import google.generativeai as genai
 from models.inference import load_model, predict
 from models.stock_logic import stock_verification
+from models.stock_result import load_stock_data
 from models.marketing_model import get_promotion_suggestions, configure_gemini_api
 from models.afinidad_model import get_related_products
 from dotenv import load_dotenv
