@@ -58,20 +58,30 @@ if gestion_stocks:
     else:
         st.warning("El modelo de stock no está disponible. No se puede verificar el stock.")
 
+if 'prevision_basada_datos' not in st.session_state:
+    st.session_state.prevision_basada_datos = False
+
+if 'prevision_generativa' not in st.session_state:
+    st.session_state.prevision_generativa = False
+
 if prevision_consumo:
     st.title("Selecciona el Método de Previsión")
     
     col1, col2 = st.columns(2)
     with col1:
-        prevision_basada_datos = st.button('PREVISIÓN BASADA EN DATOS', key="btn_prevision_basada_datos")
+        if st.button('PREVISIÓN BASADA EN DATOS', key="btn_prevision_basada_datos"):
+            st.session_state.prevision_basada_datos = True
+            st.session_state.prevision_generativa = False
     with col2:
-        prevision_generativa = st.button('PREVISIÓN CON GenAI', key="btn_prevision_generativa")
+        if st.button('PREVISIÓN CON GenAI', key="btn_prevision_generativa"):
+            st.session_state.prevision_generativa = True
+            st.session_state.prevision_basada_datos = False
 
-    if prevision_basada_datos:
+    if st.session_state.prevision_basada_datos:
         st.subheader('Previsión Basada en Datos')
         st.markdown("[Visualización de Power BI](URL_DE_TU_POWER_BI)")
 
-    if prevision_generativa:
+    if st.session_state.prevision_generativa:
         st.subheader('Previsión Con GenAI')
         st.write("Escribe una previsión de consumo que se desea saber según estación del año, contexto epidemiológico, país y región de ese país.")
         
