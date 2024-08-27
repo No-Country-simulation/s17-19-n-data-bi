@@ -112,8 +112,12 @@ def generate_gemini_response(input_prompt):
     try:
         # Generar contenido basado en el prompt del usuario
         response = model.generate_content([input_prompt])
-        if response and hasattr(response[0], 'text'):
-            return response[0].text
+        
+        # Acceder al texto generado directamente desde el objeto de respuesta
+        if response and hasattr(response, 'text'):
+            return response.text
+        elif response and hasattr(response, 'generated_text'):
+            return response.generated_text
         else:
             return "No se pudo generar una respuesta adecuada."
     except IndexError as e:
