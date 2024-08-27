@@ -1,4 +1,20 @@
+import streamlit as st
 import pandas as pd
+
+def show_stock_result(id_sucursal, skuagr_2):
+    stock_data = load_stock_data()
+
+    # Filtrar los datos según los valores ingresados
+    filtered_data = stock_data[
+        (stock_data['id_sucursal'] == int(id_sucursal)) & 
+        (stock_data['skuagr_2'] == skuagr_2)
+    ]
+
+    if not filtered_data.empty:
+        st.write("Resultados de la consulta:")
+        st.write(filtered_data)
+    else:
+        st.write("No se encontraron registros para la sucursal y SKU proporcionados.")
 
 def load_stock_data():
     sucursales = pd.read_parquet('data/Sucursales.parquet')
@@ -15,4 +31,9 @@ def load_stock_data():
     stock_actualizado['hay_stock'] = stock_actualizado['stock_disponible'] > 0
     stock_actualizado['hay_stock'] = stock_actualizado['hay_stock'].astype(int)
 
+    # Asegurarse de que las columnas tienen los tipos correctos
+    stock_actualizado['id_sucursal'] = stock_actualizado['id_sucursal'].astype(int)
+    stock_actualizado['skuagr_2'] = stock_actualizado['skuagr_2'].astype(str)
+
     return stock_actualizado
+
