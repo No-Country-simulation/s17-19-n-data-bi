@@ -1,116 +1,63 @@
 # Código en proceso aún...
 
 import streamlit as st
-import torch
-import os
-import google.generativeai as genai
-from models.inference import load_model, predict
-from models.stock_logic import stock_verification
-from models.stock_result import load_stock_data
-from models.marketing_model import get_promotion_suggestions, configure_gemini_api
-from models.afinidad_model import get_related_products
-from dotenv import load_dotenv
+import pandas as pd
 
-# Cargar las variables de entorno
-load_dotenv()
+# Cargar datos directamente
+@st.cache_data
+def load_stock_data():
+    sucursales = pd.read_parquet('data/Sucursales.parquet')
+    productos = pd.read_parquet('data/Productos.parquet')
+    data = pd.read_parquet('data/Data.parquet')
 
-# Obtener la API Key de Gemini
-gemini_api_key = os.getenv('GEMINI_API_KEY')
+    stock_inicial = pd.merge(sucursales[['id_sucursal']], productos[['skuagr_2']], how='cross')
+    stock_inicial['stock_inicial'] = 100  # Asignar 100 unidades como stock inicial
 
-# Cargar el logo
-st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
+    transacciones_agrupadas = data.groupby(['id_sucursal', 'skuagr_2']).agg({'cantidad_dispensada': 'sum'}).reset_index()
+    stock_actualizado = pd.merge(stock_inicial, transacciones_agrupadas, on=['id_sucursal', 'skuagr_2'], how='left')
+    stock_actualizado['cantidad_dispensada'] = stock_actualizado['cantidad_dispensada'].fillna(0)
+    stock_actualizado['stock_disponible'] = stock_actualizado['stock_inicial'] - stock_actualizado['cantidad_dispensada']
+    stock_actualizado['hay_stock'] = stock_actualizado['stock_disponible'] > 0
+    stock_actualizado['hay_stock'] = stock_actualizado['hay_stock'].astype(int)
 
-# Título en el menú lateral
-st.sidebar.title("Bienvenid@! Selecciona el insight:")
+    stock_actualizado['id_sucursal'] = stock_actualizado['id_sucursal'].astype(str)
+    stock_actualizado['skuagr_2'] = stock_actualizado['skuagr_2'].astype(str)
 
-# Aplicar estilo CSS a los botones
-button_style = """
-    <style>
-    .stButton > button {
-        width: 100%;
-        height: 50px;
-        background-color: #96ffae;
-        color: dark blue;
-        font-size: 16px;
-        border-radius: 10px;
-    }
-    </style>
-"""
-st.markdown(button_style, unsafe_allow_html=True)
+    return stock_actualizado
 
-# Crear botones en el menú lateral
-gestion_stocks = st.sidebar.button('GESTIÓN DE STOCKS')
-prevision_consumo = st.sidebar.button('PREVISIÓN DE CONSUMO')
-marketing_intelligence = st.sidebar.button('MARKETING INTELLIGENCE')
-afinidad_productos = st.sidebar.button('AFINIDAD DE PRODUCTOS')
+# Mostrar resultados
+def show_stock_result(stock_data, id_sucursal, skuagr_2):
+    filtered_data = stock_data[
+        (stock_data['id_sucursal'] == id_sucursal) & 
+        (stock_data['skuagr_2'] == skuagr_2)
+    ]
 
-# Gestionar la lógica de cada botón
-if gestion_stocks:
-    stock_verification()
+    if not filtered_data.empty:
+        st.write("Resultados de la consulta:")
+        st.write(filtered_data)
+    else:
+        st.write("No se encontraron registros para la sucursal y SKU proporcionados.")
 
-if prevision_consumo:
-    st.title("Selecciona el Método de Previsión")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        prevision_basada_datos = st.button('PREVISIÓN BASADA EN DATOS', key="btn_prevision_basada_datos")
-    with col2:
-        prevision_generativa = st.button('PREVISIÓN CON GenAI', key="btn_prevision_generativa")
+# Lógica principal de verificación de stock
+def stock_verification():
+    st.title("Verificación de Stock en Sucursales")
+    stock_data = load_stock_data()
 
-    if prevision_basada_datos:
-        st.subheader('Previsión Basada en Datos')
-        st.markdown("[Visualización de Power BI](URL_DE_TU_POWER_BI)")
+    with st.form(key='stock_form'):
+        id_sucursal = st.text_input("Ingrese el ID de la sucursal")
+        skuagr_2 = st.text_input("Ingrese el SKU del producto")
 
-    if prevision_generativa:
-        st.subheader('Previsión Con GenAI')
-        st.write("Escribe una previsión de consumo que se desea saber según estación del año, contexto epidemiológico, país y región de ese país.")
-        
-        user_prompt = st.text_area("PROMPT:", height=250)
-        
-        if st.button("Generar Previsión"):
-            if user_prompt.strip() == "":
-                st.warning("Por favor, ingresa una consulta en el área de texto antes de generar la previsión.")
-            else:
-                st.write("Procesando tu solicitud...")
-    
-                try:
-                    # Usar la función de generación de texto de GenAI
-                    response = genai.generate_text(prompt=user_prompt)
-                    
-                    if response and hasattr(response, 'text'):
-                        st.write("Previsión generada con GenAI:")
-                        st.write(response.text)
-                    else:
-                        st.warning("No se pudo generar una previsión adecuada. Inténtalo de nuevo.")
-    
-                except Exception as e:
-                    st.error(f"Error al generar la previsión: {e}")
+        submit_button = st.form_submit_button(label='Verificar Stock')
 
-if marketing_intelligence:
-    st.title('Sistema de Recomendación de Precios y Combos')
-    country = st.text_input('Ingrese el país:')
-    region = st.text_input('Ingrese la región / estado / provincia:')
-    therapeutic_group = st.text_input('Ingrese el grupo terapéutico:')
+    if submit_button:
+        show_stock_result(stock_data, id_sucursal, skuagr_2)
 
-    if st.button('Obtener Sugerencias de Promociones'):
-        suggestions = get_promotion_suggestions(country, region, therapeutic_group)
-        if suggestions:
-            st.subheader('Sugerencias de Promociones')
-            for i, suggestion in enumerate(suggestions, 1):
-                st.write(f"Promoción {i}: {suggestion}")
-        else:
-            st.warning("No se encontraron sugerencias para las opciones seleccionadas.")
+# Interfaz principal
+if __name__ == "__main__":
+    st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
+    st.sidebar.title("Bienvenid@! Selecciona el insight:")
 
-if afinidad_productos:
-    st.title("Posibles Demandas de Productos Relacionados")
-    prompt = st.text_input("Ingrese un producto o categoría para ver productos relacionados")
+    gestion_stocks = st.sidebar.button('GESTIÓN DE STOCKS')
 
-    if st.button("Generar Afinidad de Productos"):
-        if prompt:
-            suggestions = get_related_products(prompt)
-            if suggestions:
-                st.subheader("Productos relacionados sugeridos:")
-                for i, suggestion in enumerate(suggestions, 1):
-                    st.write(f"Producto relacionado {i}: {suggestion}")
-        else:
-            st.warning("Por favor, ingrese un producto o categoría.")
+    if gestion_stocks:
+        stock_verification()
