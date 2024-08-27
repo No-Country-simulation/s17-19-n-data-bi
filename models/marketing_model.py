@@ -48,13 +48,16 @@ def get_promotion_suggestions(country, region, therapeutic_group):
     try:
         response = model.generate_content([prompt])
         
-        # Acceder al texto generado directamente desde el objeto de respuesta
+        # Verificar si hay una respuesta válida
         if response and hasattr(response, 'text'):
-            return response.text
+            # Asumimos que cada sugerencia de promoción está en una línea nueva.
+            suggestions = response.text.splitlines()
+            return suggestions
         elif response and hasattr(response, 'generated_text'):
-            return response.generated_text
+            suggestions = response.generated_text.splitlines()
+            return suggestions
         else:
-            return None  # O un mensaje predeterminado si no hay sugerencias
+            return ["No se pudieron generar sugerencias."]  # Mensaje predeterminado si no hay sugerencias
         
     except Exception as e:
         raise RuntimeError(f"Error al generar las sugerencias: {e}")
