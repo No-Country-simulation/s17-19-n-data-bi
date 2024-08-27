@@ -5,7 +5,7 @@ import google.generativeai as genai
 from models.inference import load_model, predict
 from models.stock_logic import stock_verification
 from models.marketing_model import get_promotion_suggestions
-from models.afinidad_model import get_related_products
+from models.afinidad_model import get_affinity_recommendations
 from dotenv import load_dotenv
 
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
@@ -215,7 +215,7 @@ elif st.session_state['selected_button'] == 'AFINIDAD DE PRODUCTOS':
     if submit_button:
         if prompt:
             try:
-                suggestions = get_related_products(prompt)
+                suggestions = get_affinity_recommendations(prompt)
                 if suggestions:
                     st.subheader("Productos relacionados sugeridos:")
                     for i, suggestion in enumerate(suggestions, 1):
