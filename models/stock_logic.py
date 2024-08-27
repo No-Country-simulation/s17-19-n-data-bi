@@ -10,10 +10,6 @@ def show_stock_result(stock_data, id_sucursal, skuagr_2):
         (stock_data['skuagr_2'] == skuagr_2)
     ]
 
-    # Mostrar los datos filtrados para depuración
-    st.write("Datos filtrados:")
-    st.write(filtered_data)
-
     # Mostrar el resultado o un mensaje si no se encuentra nada
     if not filtered_data.empty:
         st.write("Resultados de la consulta:")
@@ -25,15 +21,7 @@ def stock_verification():
     # Cargar los datos una vez
     stock_data = load_stock_data()
 
-    # Mostrar los datos cargados para depuración
-    st.write("Disponibilidad de Datos Actuales:")
-    st.write(stock_data)
-
-    st.title("Aplicar Filtro de Verificación de Stock en Sucursales")
-
-    # Inicializar session state para mantener los resultados entre recargas
-    if 'filtered_data' not in st.session_state:
-        st.session_state['filtered_data'] = None
+    st.title("Verificación de Stock en Sucursales")
 
     # Crear el formulario para ingresar los datos
     with st.form(key='stock_form'):
@@ -46,19 +34,7 @@ def stock_verification():
     # Verificar si se han ingresado datos válidos y mostrar resultados
     if submit_button:
         if id_sucursal and skuagr_2:
-            # Filtrar los datos por los inputs del usuario
-            filtered_data = stock_data[
-                (stock_data['id_sucursal'] == id_sucursal) & 
-                (stock_data['skuagr_2'] == skuagr_2)
-            ]
-
-            # Guardar los resultados en session state
-            st.session_state['filtered_data'] = filtered_data
-
-    # Mostrar los resultados si están disponibles
-    if st.session_state['filtered_data'] is not None:
-        if not st.session_state['filtered_data'].empty:
-            st.write("Resultados de la consulta:")
-            st.write(st.session_state['filtered_data'])
+            # Mostrar los resultados filtrados
+            show_stock_result(stock_data, id_sucursal, skuagr_2)
         else:
-            st.write("No se encontraron registros para la sucursal y SKU proporcionados.")
+            st.error("Por favor, ingrese ambos campos: ID de Sucursal y SKU del producto.")
