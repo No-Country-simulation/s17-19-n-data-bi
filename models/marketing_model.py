@@ -43,7 +43,7 @@ model = genai.GenerativeModel(
 )
 
 def get_promotion_suggestions(country, region, therapeutic_group):
-    prompt = f"Genera 10 sugerencias de promociones específicas para el grupo terapéutico de {therapeutic_group} en {country}, {region}. Primero mostrarás el título de referencia, luego cada promoción debe estar enumerada, debe incluir un título, un ítem de descripción y un ítem de valor agregado. Debe respetar una estructura clara y concisa."
+    prompt = f"Genera 10 sugerencias de promociones específicas para el grupo terapéutico de {therapeutic_group} en {country}, {region}. Cada promoción debe incluir un título, un ítem de descripción y un ítem de valor agregado. Debe respetar una estructura clara y concisa."
 
     try:
         response = model.generate_content([prompt])
@@ -54,20 +54,30 @@ def get_promotion_suggestions(country, region, therapeutic_group):
             # Inicializar una lista para almacenar las promociones formateadas
             formatted_suggestions = []
             current_promotion = ""
+            in_title_block = False
 
             for line in suggestions:
                 stripped_line = line.strip()
-                
-                # Detectar el inicio de una nueva promoción
-                if stripped_line and stripped_line[0].isdigit():
+
+                # Detectar si estamos en el bloque del título general
+                if stripped_line.startswith("##"):
+                    in_title_block = True
+                    formatted_suggestions.append(stripped_line)
+                elif in_title_block and stripped_line.startswith("1."):
+                    # Fin del bloque de título general, inicio de las promociones
+                    in_title_block = False
+                    current_promotion = stripped_line
+                elif stripped_line and stripped_line[0].isdigit() and "." in stripped_line[1:3]:
+                    # Comienza una nueva promoción
                     if current_promotion:
                         formatted_suggestions.append(current_promotion.strip())
-                    current_promotion = f"Promoción {stripped_line[0]}: {stripped_line[3:].strip()}"
+                    current_promotion = f"Promoción {stripped_line[:2].strip()}: {stripped_line[3:].strip()}"
+                elif stripped_line.startswith("-") or stripped_line.startswith("*"):
+                    # Continuación de la descripción o valor agregado
+                    current_promotion += f"\n{stripped_line}"
                 else:
-                    if stripped_line.startswith("-"):
-                        current_promotion += f"\n{stripped_line}"
-                    else:
-                        current_promotion += f" {stripped_line}"
+                    # Continuación de la línea anterior
+                    current_promotion += f" {stripped_line}"
 
             # Añadir la última promoción a la lista
             if current_promotion:
@@ -81,5 +91,3 @@ def get_promotion_suggestions(country, region, therapeutic_group):
     
     except Exception as e:
         raise RuntimeError(f"Error al generar las sugerencias: {e}")
-
-
