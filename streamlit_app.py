@@ -13,7 +13,6 @@ load_dotenv()
 
 # Obtener la API Key de Gemini
 gemini_api_key = os.getenv('GEMINI_API_KEY')
-
 # Configurar la API generativa de Gemini
 configure_gemini_api()
 
@@ -29,7 +28,6 @@ except RuntimeError as e:
 
 # Cargar el logo en la barra lateral
 st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
-
 # Título en el menú lateral
 st.sidebar.title("Bienvenid@! Selecciona el insight:")
 
@@ -65,6 +63,9 @@ if st.sidebar.button('MARKETING INTELLIGENCE'):
 
 if st.sidebar.button('AFINIDAD DE PRODUCTOS'):
     st.session_state['selected_button'] = 'AFINIDAD DE PRODUCTOS'
+
+if st.sidebar.button('PRODUCTOS CON COBERTURA O SIN COBERTURA'):
+    st.session_state['selected_button'] = 'PRODUCTOS CON COBERTURA O SIN COBERTURA'
 
 # Gestionar la lógica basada en el botón presionado
 if st.session_state['selected_button'] == 'GESTIÓN DE STOCKS':
@@ -138,7 +139,7 @@ elif st.session_state['selected_button'] == 'MARKETING INTELLIGENCE':
 elif st.session_state['selected_button'] == 'AFINIDAD DE PRODUCTOS':
     st.title("Posibles Demandas de Productos Relacionados")
     with st.form(key='afinidad_form'):
-        prompt = st.text_input("Ingrese un producto o categoría para ver productos relacionados")
+        prompt = st.text_input("Ingrese un contexto, un producto o una categoría para ver combinaciones relacionadas")
         
         # Botón para enviar el formulario
         submit_button = st.form_submit_button("Generar Afinidad de Productos")
@@ -158,4 +159,11 @@ elif st.session_state['selected_button'] == 'AFINIDAD DE PRODUCTOS':
         else:
             st.warning("Por favor, ingrese un producto o categoría.")
 
+elif st.session_state['selected_button'] == 'PRODUCTOS CON COBERTURA O SIN COBERTURA':
+    st.title("Productos con Cobertura o Sin Cobertura")
+    st.subheader('Visualizaciones de Power BI')
+    # Aquí puedes agregar múltiples enlaces a diferentes visualizaciones de Power BI
+    st.markdown("[Visualización de Power BI PRODUCTOS CON COBERTURA](URL_DE_TU_POWER_BI_1)")
+    st.markdown("[Visualización de Power BI PRODUCTOS SIN COBERTURA](URL_DE_TU_POWER_BI_2)")
+    st.markdown("[Visualización de Power BI PRODUCTOS GENÉRICOS](URL_DE_TU_POWER_BI_3)")
 
