@@ -51,9 +51,16 @@ def load_model(model_name):
 
 def predict(model, input_data):
     try:
-        # Verificar que input_data no esté vacío
+        # Verificar si input_data está vacío
         if input_data.empty:
             raise ValueError("El input_data está vacío. No se puede hacer la predicción.")
+        
+        # Convertir todos los valores no numéricos a NaN y luego eliminar filas con NaN
+        input_data = input_data.apply(pd.to_numeric, errors='coerce').dropna()
+
+        # Verificar si input_data sigue teniendo datos válidos después del procesamiento
+        if input_data.empty:
+            raise ValueError("El input_data no tiene datos válidos después de limpiar los valores no numéricos.")
 
         # Convertir los datos de entrada en un tensor
         input_tensor = torch.tensor(input_data.values, dtype=torch.float32)
@@ -63,6 +70,11 @@ def predict(model, input_data):
 
         # Retornar el resultado de la predicción
         return prediction
+
+    except Exception as e:
+        # Manejar el error e imprimir detalles para depuración
+        print(f"Error durante la predicción: {e}")
+        raise
 
     except Exception as e:
         # Manejar el error e imprimir detalles para depuración
