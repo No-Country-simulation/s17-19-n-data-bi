@@ -3,37 +3,38 @@ import torch
 from models.inference import load_model, predict
 from models.stock_data import load_stock_data
 
-def show_stock_result(stock_data, id_sucursal, skuagr_2):
+def show_stock_result(stock_data, id_sucursal, skuagr_2, model):
     # Filtrar los datos por los inputs del usuario
     filtered_data = stock_data[
         (stock_data['id_sucursal'] == id_sucursal) & 
         (stock_data['skuagr_2'] == skuagr_2)
     ]
 
-    # Mostrar los datos filtrados para depuración
-    st.write("Datos filtrados:")
-    st.write(filtered_data)
-
     # Mostrar el resultado o un mensaje si no se encuentra nada
     if not filtered_data.empty:
         st.write("Resultados de la consulta:")
         st.write(filtered_data)
+        
+        # Preparar los datos para la inferencia
+        input_data = filtered_data.drop(columns=['stock_inicial', 'cantidad_dispensada', 'stock_disponible', 'hay_stock'])
+
+        # Convertir a tensores y hacer la predicción
+        with torch.no_grad():
+            prediction = predict(model, input_data)
+
+        # Mostrar la predicción
+        st.write(f"Predicción de disponibilidad de stock: {'Disponible' if prediction else 'No Disponible'}")
     else:
-        st.write("No se encontraron registros para la sucursal y SKU proporcionados.")
+        st.warning("No se encontraron registros para la sucursal y SKU proporcionados.")
 
 def stock_verification():
     # Cargar los datos una vez
     stock_data = load_stock_data()
 
-    # Mostrar los datos cargados para depuración
-    st.write("Disponibilidad de Datos Actuales:")
-    st.write(stock_data)
+    # Cargar el modelo de inferencia
+    model = load_model('models/stock_model.pth')  # Asegúrate de que el path sea correcto
 
     st.title("Aplicar Filtro de Verificación de Stock en Sucursales")
-
-    # Inicializar session state para mantener los resultados entre recargas
-    if 'filtered_data' not in st.session_state:
-        st.session_state['filtered_data'] = None
 
     # Crear el formulario para ingresar los datos
     with st.form(key='stock_form'):
@@ -46,15 +47,12 @@ def stock_verification():
     # Verificar si se han ingresado datos válidos y mostrar resultados
     if submit_button:
         if id_sucursal and skuagr_2:
-            # Filtrar los datos por los inputs del usuario
-            filtered_data = stock_data[
-                (stock_data['id_sucursal'] == id_sucursal) & 
-                (stock_data['skuagr_2'] == skuagr_2)
-            ]
+            st.write("Verificando stock para Sucursal:", id_sucursal, "y SKU:", skuagr_2)  # Depuración
 
-            # Mostrar resultados
-            if not filtered_data.empty:
-                st.write("Resultados de la consulta:")
-                st.write(filtered_data)
-            else:
-                st.write("No se encontraron registros para la sucursal y SKU proporcionados.")
+            # Mostrar los datos filtrados usando la función show_stock_result
+            show_stock_result(stock_data, id_sucursal, skuagr_2, model)
+        else:
+            st.warning("Por favor, ingrese tanto el ID de la sucursal como el SKU del producto.")
+
+# Llamada a la función principal para ejecutar la funcionalidad de verificación
+stock_verification()
