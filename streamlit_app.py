@@ -49,21 +49,32 @@ button_style = """
 """
 st.markdown(button_style, unsafe_allow_html=True)
 
-# Crear botones en el menú lateral
-gestion_stocks = st.sidebar.button('GESTIÓN DE STOCKS')
-prevision_consumo = st.sidebar.button('PREVISIÓN DE CONSUMO')
-marketing_intelligence = st.sidebar.button('MARKETING INTELLIGENCE')
-afinidad_productos = st.sidebar.button('AFINIDAD DE PRODUCTOS')
+# Inicializar el estado de la sesión para manejar los botones
+if 'selected_button' not in st.session_state:
+    st.session_state['selected_button'] = None
 
-# Gestionar la lógica de cada botón
-if gestion_stocks:
+# Crear botones en el menú lateral y manejar el estado
+if st.sidebar.button('GESTIÓN DE STOCKS'):
+    st.session_state['selected_button'] = 'GESTIÓN DE STOCKS'
+
+if st.sidebar.button('PREVISIÓN DE CONSUMO'):
+    st.session_state['selected_button'] = 'PREVISIÓN DE CONSUMO'
+
+if st.sidebar.button('MARKETING INTELLIGENCE'):
+    st.session_state['selected_button'] = 'MARKETING INTELLIGENCE'
+
+if st.sidebar.button('AFINIDAD DE PRODUCTOS'):
+    st.session_state['selected_button'] = 'AFINIDAD DE PRODUCTOS'
+
+# Gestionar la lógica basada en el botón presionado
+if st.session_state['selected_button'] == 'GESTIÓN DE STOCKS':
     st.title("Gestión de Stocks")
     if stock_model is not None:
         stock_verification(stock_model)
     else:
         st.warning("El modelo de stock no está disponible. No se puede verificar el stock.")
 
-if prevision_consumo:
+elif st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
     st.title("Previsión de Consumo")
     col1, col2 = st.columns(2)
     with col1:
@@ -99,7 +110,7 @@ if prevision_consumo:
                 except Exception as e:
                     st.error(f"Error al generar la previsión: {e}")
 
-if marketing_intelligence:
+elif st.session_state['selected_button'] == 'MARKETING INTELLIGENCE':
     st.title('Sistema de Recomendación de Precios y Combos')
     with st.form(key='marketing_form'):
         country = st.text_input('Ingrese el país:')
@@ -124,7 +135,7 @@ if marketing_intelligence:
             except Exception as e:
                 st.error(f"Se produjo un error al obtener las sugerencias: {e}")
 
-if afinidad_productos:
+elif st.session_state['selected_button'] == 'AFINIDAD DE PRODUCTOS':
     st.title("Posibles Demandas de Productos Relacionados")
     with st.form(key='afinidad_form'):
         prompt = st.text_input("Ingrese un producto o categoría para ver productos relacionados")
@@ -146,4 +157,5 @@ if afinidad_productos:
                 st.error(f"Se produjo un error al obtener los productos relacionados: {e}")
         else:
             st.warning("Por favor, ingrese un producto o categoría.")
+
 
