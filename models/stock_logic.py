@@ -1,7 +1,7 @@
 import streamlit as st
 import torch
 from models.inference import load_model, predict
-from models.stock_result import show_stock_result
+from models.stock_data import load_stock_data
 
 def show_stock_result(stock_data, id_sucursal, skuagr_2):
     # Filtrar los datos por los inputs del usuario
