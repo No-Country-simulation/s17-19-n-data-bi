@@ -1,6 +1,6 @@
 import torch
 import streamlit as st
-from .inference import load_model, predict  # Adjust the import based on your directory structure
+from models.inference import load_model, predict
 
 def stock_verification():
     st.title("Verificación de Stock en Sucursales")
