@@ -46,7 +46,8 @@ afinidad_productos = st.sidebar.button('AFINIDAD DE PRODUCTOS')
 
 # Gestionar la lógica de cada botón
 if gestion_stocks:
-    stock_verification()
+    stock_data = load_stock_data()  # Verifica que esta llamada funcione y retorne un DataFrame
+    st.write(stock_data.head())  # Esto debería mostrar los primeros registros de los datos de stock
 
 if prevision_consumo:
     st.title("Selecciona el Método de Previsión")
