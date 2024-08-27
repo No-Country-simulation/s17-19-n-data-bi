@@ -199,8 +199,7 @@ elif st.session_state['selected_button'] == 'MARKETING INTELLIGENCE':
                 
                 if suggestions:
                     st.subheader('Sugerencias de Promociones')
-                    for i, suggestion in enumerate(suggestions, 1):
-                        st.write(f"Promoción {i}: {suggestion}")
+                    st.write(suggestions)  # Mostrar el texto tal como lo devuelve la API
                 else:
                     st.warning("No se encontraron sugerencias para las opciones seleccionadas.")
             
