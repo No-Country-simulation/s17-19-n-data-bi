@@ -7,7 +7,12 @@ def stock_verification():
     st.title("Verificación de Stock en Sucursales")
     
     # Cargar los datos de stock
-    stock_data = load_stock_data()
+    try:
+        stock_data = load_stock_data()
+        st.write("Datos de stock cargados correctamente.")
+    except Exception as e:
+        st.error(f"Error al cargar los datos de stock: {e}")
+        return
     
     model = load_model("stock")
 
@@ -22,17 +27,23 @@ def stock_verification():
 
         # Solo ejecutar la predicción si se presiona el botón de submit
         if submit_button:
+            st.write(f"ID Sucursal: {id_sucursal}, SKU: {skuagr_2}")
             try:
+                # Convertir id_sucursal a entero para la comparación
+                id_sucursal = int(id_sucursal)
+
                 # Filtrar los datos de stock para la sucursal y SKU ingresados
-                resultado = stock_data[(stock_data['id_sucursal'] == int(id_sucursal)) & 
+                resultado = stock_data[(stock_data['id_sucursal'] == id_sucursal) & 
                                        (stock_data['skuagr_2'] == skuagr_2)]
                 
                 if resultado.empty:
                     st.warning("No se encontraron registros para los valores ingresados.")
                 else:
                     # Mostrar el resultado en Streamlit
+                    st.write("Resultado encontrado:")
                     st.write(resultado)
             except ValueError:
                 st.error("Por favor ingrese valores numéricos válidos.")
             except Exception as e:
                 st.error(f"Error al verificar stock: {e}")
+
