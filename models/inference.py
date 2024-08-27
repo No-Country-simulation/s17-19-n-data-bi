@@ -43,7 +43,7 @@ def load_model(model_name):
     
     if os.path.exists(model_path):
         # Cargar el estado del modelo
-        model.load_state_dict(torch.load(model_path))
+        model.load_state_dict(torch.load(model_path, weights_only=True))
         model.eval()  # Cambiar el modelo a modo de evaluación
         return model
     else:
