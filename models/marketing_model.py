@@ -43,7 +43,7 @@ model = genai.GenerativeModel(
 )
 
 def get_promotion_suggestions(country, region, therapeutic_group):
-    prompt = f"Genera sugerencias de promociones para {therapeutic_group} en {country}, {region}."
+    prompt = f"Genera hasta 10 sugerencias de promociones específicas y de alta calidad para {therapeutic_group} en {country}, {region}."
     
     try:
         response = model.generate_content([prompt])
@@ -52,10 +52,16 @@ def get_promotion_suggestions(country, region, therapeutic_group):
         if response and hasattr(response, 'text'):
             # Asumimos que cada sugerencia de promoción está en una línea nueva.
             suggestions = response.text.splitlines()
-            return suggestions
+            
+            # Filtrar las promociones vacías y limitar a 10 sugerencias
+            filtered_suggestions = [s for s in suggestions if s.strip()]
+            return filtered_suggestions[:10]
+        
         elif response and hasattr(response, 'generated_text'):
             suggestions = response.generated_text.splitlines()
-            return suggestions
+            filtered_suggestions = [s for s in suggestions if s.strip()]
+            return filtered_suggestions[:10]
+        
         else:
             return ["No se pudieron generar sugerencias."]  # Mensaje predeterminado si no hay sugerencias
         
