@@ -128,11 +128,12 @@ if st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
                 except Exception as e:
                     st.error(f"Error al generar la previsión: {e}")
 
+        # Mostrar la previsión generada en un lugar visible
         if st.session_state['generated_prevision']:
-            st.write("Previsión generada con GenAI:")
-            st.write(st.session_state['generated_prevision'])
+            st.write("### Previsión generada con GenAI:")
+            st.success(st.session_state['generated_prevision'])
 
-    # Verificar el estado actual en la consola de Streamlit
+    # Verificar el estado actual en la consola de Streamlit (puedes quitar esta parte después de probar)
     st.write("Estado actual de la sesión:", st.session_state)
 
 elif st.session_state['selected_button'] == 'MARKETING INTELLIGENCE':
