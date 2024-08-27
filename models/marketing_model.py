@@ -43,7 +43,7 @@ model = genai.GenerativeModel(
 )
 
 def get_promotion_suggestions(country, region, therapeutic_group):
-    prompt = f"Genera posibles promociones recomendadas según los datos que el usuario ha ingresado, grupo terapéutico de {therapeutic_group} en {country}, {region}. Al menos 10."
+    prompt = f"Genera posibles promociones de productos farmacéuticos o de belleza, según los datos que el usuario ha ingresado, grupo terapéutico de {therapeutic_group} en {country}, {region}."
 
     try:
         response = model.generate_content([prompt])
