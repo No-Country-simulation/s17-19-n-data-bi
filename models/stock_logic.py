@@ -1,5 +1,5 @@
-import torch
 import streamlit as st
+import torch
 from models.inference import load_model, predict
 
 def stock_verification():
@@ -7,24 +7,21 @@ def stock_verification():
     model = load_model("stock")
 
     if model:
-        if 'sucursal_id' not in st.session_state:
-            st.session_state['sucursal_id'] = ''
-        if 'skuagr_2' not in st.session_state:
-            st.session_state['skuagr_2'] = ''
+        # Definir un formulario con un botón de submit
+        with st.form(key='stock_form'):
+            sucursal_id = st.text_input("Ingrese el ID de la sucursal")
+            skuagr_2 = st.text_input("Ingrese el SKU del producto")
 
+            # Botón para enviar el formulario
+            submit_button = st.form_submit_button(label='Verificar Stock')
 
-        sucursal_id = st.text_input("Ingrese el ID de la sucursal", value=st.session_state['sucursal_id'])
-        skuagr_2 = st.text_input("Ingrese el SKU del producto", value=st.session_state['skuagr_2'])
-
-        if st.button('Verificar Stock'):
-            st.session_state['sucursal_id'] = sucursal_id
-            st.session_state['skuagr_2'] = skuagr_2
-
+        # Solo ejecutar la predicción si se presiona el botón de submit
+        if submit_button:
             try:
                 input_data = torch.tensor([float(sucursal_id), float(skuagr_2)])
                 result = predict(model, input_data)
-                st.write(f'Resultado de la predicción: {result}')
+                st.write(f'Resultado de la petición: {result}')
             except ValueError:
                 st.error("Por favor ingrese valores numéricos válidos.")
             except Exception as e:
-                st.error(f"Error al realizar la predicción: {e}")
+                st.error(f"Error al verificar stock: {e}")
