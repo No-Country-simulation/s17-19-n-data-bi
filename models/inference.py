@@ -55,9 +55,17 @@ def predict(model, input_data):
         # Verificar si input_data está vacío
         if input_data.empty:
             raise ValueError("El input_data está vacío. No se puede hacer la predicción.")
-        
+
+        # Mostrar los datos originales para depuración
+        print("Datos originales en input_data:")
+        print(input_data)
+
         # Convertir todos los valores no numéricos a NaN y luego eliminar filas con NaN
         input_data = input_data.apply(pd.to_numeric, errors='coerce').dropna()
+
+        # Mostrar los datos después de limpiar los valores no numéricos
+        print("Datos después de limpiar valores no numéricos:")
+        print(input_data)
 
         # Verificar si input_data sigue teniendo datos válidos después del procesamiento
         if input_data.empty:
@@ -76,6 +84,7 @@ def predict(model, input_data):
         # Manejar el error e imprimir detalles para depuración
         print(f"Error durante la predicción: {e}")
         raise
+
 
     except Exception as e:
         # Manejar el error e imprimir detalles para depuración
