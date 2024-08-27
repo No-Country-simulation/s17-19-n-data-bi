@@ -1,1 +1,1 @@
-# Los parquets cargados en esta carpeta son para el deploy de la app
+# Los parquets cargados en esta carpeta son para entrenamiento del modelo de Machine Learning.
