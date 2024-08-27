@@ -75,6 +75,12 @@ if st.session_state['selected_button'] == 'GESTIÓN DE STOCKS':
     else:
         st.warning("El modelo de stock no está disponible. No se puede verificar el stock.")
 
+def fake_generate_text(prompt):
+    return f"Resultado de la previsión para: {prompt}"
+
+if 'selected_button' not in st.session_state:
+    st.session_state['selected_button'] = None
+
 elif st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
     st.title("Selecciona tu Consulta de Interés")
     col1, col2 = st.columns(2)
@@ -94,7 +100,7 @@ elif st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
         user_prompt = st.text_area("PROMPT:", height=250)
         
         # Añadimos una clave para asegurar que se retiene el valor al recargar
-        if st.button("Generar Previsión", key='generate'):
+        if st.button("Generar Previsión"):
             if user_prompt.strip() == "":
                 st.warning("Por favor, ingresa una consulta en el área de texto antes de generar la previsión.")
             else:
@@ -102,17 +108,20 @@ elif st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
     
                 try:
                     # Asumimos que genai.generate_text es una función síncrona que retorna un objeto con el atributo 'text'
-                    response = genai.generate_text(prompt=user_prompt)
-                    
-                    # Verificamos que la respuesta no esté vacía y tenga el atributo 'text'
-                    if response and hasattr(response, 'text'):
+                    # response = genai.generate_text(prompt=user_prompt)  # Descomenta esta línea para la función real
+                    response = fake_generate_text(prompt=user_prompt)  # Simulación
+
+                    if response:
                         st.write("Previsión generada con GenAI:")
-                        st.write(response.text)
+                        st.write(response)
                     else:
                         st.warning("No se pudo generar una previsión adecuada. Inténtalo de nuevo.")
     
                 except Exception as e:
                     st.error(f"Error al generar la previsión: {e}")
+
+    # Verificar el estado actual en la consola de Streamlit
+    st.write("Estado actual de la sesión:", st.session_state)
 
 elif st.session_state['selected_button'] == 'MARKETING INTELLIGENCE':
     st.title('Sistema de Recomendación de Precios y Combos')
