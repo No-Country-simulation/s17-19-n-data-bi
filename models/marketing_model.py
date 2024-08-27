@@ -44,10 +44,10 @@ model = genai.GenerativeModel(
 
 def get_promotion_suggestions(country, region, therapeutic_group):
     prompt = (
-        f"Genera una lista de al menos siete sugerencias específicas de promociones para productos farmacéuticos o de belleza "
+        f"Genera una lista de al menos 10 sugerencias específicas de promociones para productos farmacéuticos o de belleza "
         f"relacionados con {therapeutic_group} en {country}, {region}. Cada sugerencia debe ser clara y enfocada en "
         f"promociones prácticas para consumidores. Evita descripciones genéricas y concéntrate en ofertas específicas."
-        f"Separa las sugerencias como una lista enumerada del 1 al 7, renglón por renglón."
+        f"Separa las sugerencias como una lista enumerada del 1 al 10, renglón por renglón."
     )
 
     try:
@@ -57,7 +57,7 @@ def get_promotion_suggestions(country, region, therapeutic_group):
             suggestions = response.text.strip().splitlines()
 
             # Filtrar líneas vacías y devolver hasta 10 sugerencias
-            return [s for s in suggestions if s][:10]
+            return [s for s in suggestions if s][:11]
 
         else:
             return ["No se pudieron generar sugerencias."]
