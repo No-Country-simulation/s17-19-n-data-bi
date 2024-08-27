@@ -62,11 +62,9 @@ if prevision_consumo:
 
     if prevision_generativa:
         st.subheader('Previsión Con GenAI')
-        st.write("Aquí se manejaría la lógica para la previsión generativa con GenAI.")
-        
         st.write("Escribe una previsión de consumo que se desea saber según estación del año, contexto epidemiológico, país y región de ese país.")
         
-        user_prompt = st.text_area("Escribe aquí la previsión de consumo que deseas saber:", height=250)
+        user_prompt = st.text_area("PROMPT:", height=250)
         
         if st.button("Generar Previsión"):
             if user_prompt.strip() == "":
