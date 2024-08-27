@@ -19,7 +19,8 @@ def show_stock_result(stock_data, id_sucursal, skuagr_2):
 
 def stock_verification():
     # Cargar los datos una vez
-    stock_data = load_stock_data()
+    st.write("Datos cargados:")
+    st.write(stock_data)
     
     st.title("Verificación de Stock en Sucursales")
 
