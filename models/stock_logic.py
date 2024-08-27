@@ -26,7 +26,7 @@ def stock_verification():
                 result = predict(model, input_data)
                 
                 # Cargar y filtrar los datos de stock
-                stock_data = load_stock_data()
+                stock_data = load_stock_data()  # Esta función se llama aquí
                 filtered_data = stock_data[
                     (stock_data['id_sucursal'] == int(id_sucursal)) & 
                     (stock_data['skuagr_2'] == skuagr_2)
@@ -43,7 +43,6 @@ def stock_verification():
             except Exception as e:
                 st.error(f"Error al verificar stock: {e}")
 
-# Función para cargar y procesar los datos de stock
 def load_stock_data():
     sucursales = pd.read_parquet('data/Sucursales.parquet')
     productos = pd.read_parquet('data/Productos.parquet')
@@ -60,3 +59,4 @@ def load_stock_data():
     stock_actualizado['hay_stock'] = stock_actualizado['hay_stock'].astype(int)
 
     return stock_actualizado
+
