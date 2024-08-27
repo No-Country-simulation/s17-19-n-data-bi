@@ -79,9 +79,9 @@ elif st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
     st.title("Selecciona tu Consulta de Interés")
     col1, col2 = st.columns(2)
     with col1:
-        prevision_basada_datos = st.button('PREVISIÓN BASADA EN DATOS')
+        prevision_basada_datos = st.button('PREVISIÓN BASADA EN DATOS', key='datos')
     with col2:
-        prevision_generativa = st.button('PREVISIÓN CON GenAI')
+        prevision_generativa = st.button('PREVISIÓN CON GenAI', key='genai')
 
     if prevision_basada_datos:
         st.subheader('Previsión Basada en Datos')
