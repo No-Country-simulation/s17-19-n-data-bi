@@ -60,17 +60,17 @@ def get_promotion_suggestions(country, region, therapeutic_group):
                 stripped_line = line.strip()
 
                 # Detectar si estamos en el bloque del título general
-                if stripped_line.startswith("##"):
+                if stripped_line.startswith(" "):
                     formatted_suggestions.append(stripped_line)
                 elif stripped_line.startswith("1."):
                     # Fin del bloque de título general, inicio de las promociones
                     formatted_suggestions.append("\nGrupo Terapéutico de " + therapeutic_group + f" - {region}, {country}:\n")
-                    current_promotion = f"Promoción {stripped_line[0]}: {stripped_line[3:].strip()}"
+                    current_promotion = f"{stripped_line[0]}: {stripped_line[3:].strip()}"
                 elif stripped_line and stripped_line[0].isdigit() and "." in stripped_line[1:3]:
                     # Comienza una nueva promoción
                     if current_promotion:
                         formatted_suggestions.append(current_promotion.strip())
-                    current_promotion = f"Promoción {stripped_line[:2].strip()}: {stripped_line[3:].strip()}"
+                    current_promotion = f"{stripped_line[:2].strip()}: {stripped_line[3:].strip()}"
                 elif stripped_line.startswith("-") or stripped_line.startswith("*"):
                     # Continuación de la descripción o valor agregado
                     current_promotion += f"\n{stripped_line}"
