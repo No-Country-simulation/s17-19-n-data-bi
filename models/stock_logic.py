@@ -32,7 +32,7 @@ def stock_verification():
     stock_data = load_stock_data()
 
     # Cargar el modelo de inferencia
-    model = load_model('models/stock_model.pth')  # Asegúrate de que el path sea correcto
+    model = load_model('stock')
 
     st.title("Aplicar Filtro de Verificación de Stock en Sucursales")
 
