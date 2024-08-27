@@ -3,34 +3,58 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
-# Configurar la API generativa de Gemini
-def configure_gemini_api():
-    load_dotenv()
-    gemini_api_key = os.getenv('GEMINI_API_KEY')
-    genai.configure(api_key=gemini_api_key)
+GEMINI_API_KEY = "your_gemini_api_key"  # Asegúrate de que esta clave esté bien configurada
 
-def get_promotion_suggestions(country, region, therapeutic_group, num_suggestions=5):
-    # Validar que los parámetros no estén vacíos
-    if not country or not region or not therapeutic_group:
-        return ["Por favor, proporciona el país, la región y el grupo terapéutico para obtener sugerencias."]
+if GEMINI_API_KEY is None:
+    raise Exception("API key for Gemini not found. Make sure it's set in the config.toml file.")
 
-    input_prompt = (
-        f"En el país {country}, región {region}, y para el grupo terapéutico {therapeutic_group}, "
-        f"sugiere {num_suggestions} promociones de marketing farmacéutico efectivas que podrían implementarse. "
-        "Las promociones deben estar alineadas con las tendencias actuales de mercado y ser aplicables en el contexto local. "
-        "Hacer una oferta de implementación de un precio sugerido en la moneda local del país seleccionado."
-    )
+genai.configure(api_key=GEMINI_API_KEY)
 
+generation_config = {
+    "temperature": 0.4,
+    "top_p": 1,
+    "top_k": 32,
+    "max_output_tokens": 4096,
+}
+
+safety_settings = [
+    {
+        "category": "HARM_CATEGORY_HARASSMENT",
+        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+    },
+    {
+        "category": "HARM_CATEGORY_HATE_SPEECH",
+        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+    },
+    {
+        "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+    },
+    {
+        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+    }
+]
+
+model = genai.GenerativeModel(
+    model_name="gemini-1.5-flash-latest",
+    generation_config=generation_config,
+    safety_settings=safety_settings
+)
+
+def get_promotion_suggestions(country, region, therapeutic_group):
+    prompt = f"Genera sugerencias de promociones para {therapeutic_group} en {country}, {region}."
+    
     try:
-        response = genai.generate_text(input_prompt)
+        response = model.generate_content([prompt])
+        
+        # Acceder al texto generado directamente desde el objeto de respuesta
         if response and hasattr(response, 'text'):
-            suggestions = response.text.split('\n')
-            if len(suggestions) >= num_suggestions:
-                return suggestions[:num_suggestions]  # Devolver solo las primeras `num_suggestions`
-            else:
-                return suggestions
+            return response.text
+        elif response and hasattr(response, 'generated_text'):
+            return response.generated_text
         else:
-            return ["No se pudo generar una respuesta adecuada."]
-
+            return None  # O un mensaje predeterminado si no hay sugerencias
+        
     except Exception as e:
-        return [f"Error al generar sugerencias: {e}"]
+        raise RuntimeError(f"Error al generar las sugerencias: {e}")
