@@ -21,12 +21,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt  # Instala las dependencias
+        pip install -r requirements.txt  # Instala las dependencias necesarias para el entrenamiento
 
-    - name: Run the training notebook
-      run: |
-        pip install jupyter nbconvert
-        jupyter nbconvert --to notebook --execute --inplace path_to_your_notebook.ipynb
+    - name: Run the training script
+      run: python train_model/train_stock_model.py  # Ejecuta el script de entrenamiento
 
   deploy_application:
     runs-on: ubuntu-latest
@@ -47,5 +45,6 @@ jobs:
     - name: Run script
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      run: python streamlit_app.py
+      run: python streamlit_app.py  # Ejecuta la aplicación Streamlit
+
 
