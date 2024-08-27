@@ -43,7 +43,7 @@ marketing_intelligence = st.sidebar.button('MARKETING INTELLIGENCE')
 afinidad_productos = st.sidebar.button('AFINIDAD DE PRODUCTOS')
 
 # Gestionar la lógica de cada botón
-if st.sidebar.button('GESTIÓN DE STOCKS'):
+if gestion_stocks:
     stock_verification()
 
 if prevision_consumo:
