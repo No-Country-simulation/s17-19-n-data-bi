@@ -43,51 +43,39 @@ model = genai.GenerativeModel(
 )
 
 def get_promotion_suggestions(country, region, therapeutic_group):
-    prompt = f"Genera 10 sugerencias de promociones específicas para el grupo terapéutico de {therapeutic_group} en {country}, {region}. Asegúrate de que cada sugerencia esté bien estructurada, clara y con un valor agregado evidente."
-    
+    prompt = f"Genera 10 sugerencias de promociones específicas para el grupo terapéutico de {therapeutic_group} en {country}, {region}. Primero mostrarás el título de referencia, luego cada promoción debe estar enumerada, debe incluir un título, un ítem de descripción y un ítem de valor agregado. Debe respetar una estructura clara."
+
     try:
         response = model.generate_content([prompt])
-        
+
         if response and hasattr(response, 'text'):
             suggestions = response.text.splitlines()
-            
-            # Filtrar líneas vacías y asegurar que cada sugerencia tenga un formato correcto
-            filtered_suggestions = [s.strip() for s in suggestions if s.strip()]
-            structured_suggestions = []
 
+            # Inicializar una lista para almacenar las promociones formateadas
+            formatted_suggestions = []
             current_promotion = []
-            for suggestion in filtered_suggestions:
-                if suggestion.startswith(("*", "Promoción:", "Público objetivo:", "Valor agregado:")):
-                    current_promotion.append(suggestion)
-                else:
+
+            for line in suggestions:
+                stripped_line = line.strip()
+                
+                # Comienza una nueva promoción cuando se encuentra un número al principio de la línea
+                if stripped_line and stripped_line[0].isdigit():
                     if current_promotion:
-                        structured_suggestions.append("\n".join(current_promotion))
-                    current_promotion = [suggestion]
-            if current_promotion:
-                structured_suggestions.append("\n".join(current_promotion))
-
-            return structured_suggestions[:10]
-        
-        elif response and hasattr(response, 'generated_text'):
-            suggestions = response.generated_text.splitlines()
-            filtered_suggestions = [s.strip() for s in suggestions if s.strip()]
-            structured_suggestions = []
-
-            current_promotion = []
-            for suggestion in filtered_suggestions:
-                if suggestion.startswith(("*", "Promoción:", "Público objetivo:", "Valor agregado:")):
-                    current_promotion.append(suggestion)
+                        formatted_suggestions.append(" ".join(current_promotion))
+                    current_promotion = [stripped_line]
                 else:
-                    if current_promotion:
-                        structured_suggestions.append("\n".join(current_promotion))
-                    current_promotion = [suggestion]
-            if current_promotion:
-                structured_suggestions.append("\n".join(current_promotion))
+                    current_promotion.append(stripped_line)
 
-            return structured_suggestions[:10]
-        
+            # Añadir la última promoción a la lista
+            if current_promotion:
+                formatted_suggestions.append(" ".join(current_promotion))
+
+            # Devolver sólo las 10 primeras sugerencias
+            return formatted_suggestions[:10]
+
         else:
             return ["No se pudieron generar sugerencias."]
-        
+    
     except Exception as e:
         raise RuntimeError(f"Error al generar las sugerencias: {e}")
+
