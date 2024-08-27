@@ -78,28 +78,42 @@ if st.session_state['selected_button'] == 'GESTIÓN DE STOCKS':
 def fake_generate_text(prompt):
     return f"Resultado de la previsión para: {prompt}"
 
+# Estado inicial
 if 'selected_button' not in st.session_state:
     st.session_state['selected_button'] = None
+if 'show_prevision_generativa' not in st.session_state:
+    st.session_state['show_prevision_generativa'] = False
+if 'generated_prevision' not in st.session_state:
+    st.session_state['generated_prevision'] = None
 
-elif st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
+# Manejando el estado del botón de la barra lateral
+if st.sidebar.button('PREVISIÓN DE CONSUMO'):
+    st.session_state['selected_button'] = 'PREVISIÓN DE CONSUMO'
+    st.session_state['show_prevision_generativa'] = False
+    st.session_state['generated_prevision'] = None
+
+if st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
     st.title("Selecciona tu Consulta de Interés")
     col1, col2 = st.columns(2)
+
     with col1:
-        prevision_basada_datos = st.button('PREVISIÓN BASADA EN DATOS', key='datos')
+        prevision_basada_datos = st.button('PREVISIÓN BASADA EN DATOS')
     with col2:
-        prevision_generativa = st.button('PREVISIÓN CON GenAI', key='genai')
+        prevision_generativa = st.button('PREVISIÓN CON GenAI')
 
     if prevision_basada_datos:
         st.subheader('Previsión Basada en Datos')
         st.markdown("[Visualización de Power BI](URL_DE_TU_POWER_BI)")
 
     if prevision_generativa:
+        st.session_state['show_prevision_generativa'] = True
+
+    if st.session_state['show_prevision_generativa']:
         st.subheader('Previsión Con GenAI')
         st.write("Escribe una previsión de consumo que se desea saber según estación del año, contexto epidemiológico, país y región de ese país.")
         
         user_prompt = st.text_area("PROMPT:", height=250)
         
-        # Añadimos una clave para asegurar que se retiene el valor al recargar
         if st.button("Generar Previsión"):
             if user_prompt.strip() == "":
                 st.warning("Por favor, ingresa una consulta en el área de texto antes de generar la previsión.")
@@ -107,18 +121,20 @@ elif st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
                 st.write("Procesando tu solicitud...")
     
                 try:
-                    # Asumimos que genai.generate_text es una función síncrona que retorna un objeto con el atributo 'text'
-                    # response = genai.generate_text(prompt=user_prompt)  # Descomenta esta línea para la función real
-                    response = fake_generate_text(prompt=user_prompt)  # Simulación
-
+                    # Simulación de la generación de previsión
+                    response = fake_generate_text(prompt=user_prompt)
+                    
                     if response:
-                        st.write("Previsión generada con GenAI:")
-                        st.write(response)
+                        st.session_state['generated_prevision'] = response
                     else:
                         st.warning("No se pudo generar una previsión adecuada. Inténtalo de nuevo.")
     
                 except Exception as e:
                     st.error(f"Error al generar la previsión: {e}")
+
+        if st.session_state['generated_prevision']:
+            st.write("Previsión generada con GenAI:")
+            st.write(st.session_state['generated_prevision'])
 
     # Verificar el estado actual en la consola de Streamlit
     st.write("Estado actual de la sesión:", st.session_state)
