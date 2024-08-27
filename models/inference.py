@@ -2,6 +2,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 import os
+from sklearn.preprocessing import LabelEncoder
 
 # Definición de la estructura del modelo, común para todos los casos
 class BaseModel(nn.Module):
@@ -60,18 +61,19 @@ def predict(model, input_data):
         print("Datos originales en input_data:")
         print(input_data)
 
-        # Identificar columnas numéricas
-        numeric_columns = input_data.select_dtypes(include=['number']).columns
+        # Codificar columnas categóricas
+        label_encoders = {}
+        for column in input_data.columns:
+            if input_data[column].dtype == 'object':
+                le = LabelEncoder()
+                input_data[column] = le.fit_transform(input_data[column])
+                label_encoders[column] = le
 
-        # Convertir solo las columnas numéricas a valores numéricos y eliminar NaN
-        input_data[numeric_columns] = input_data[numeric_columns].apply(pd.to_numeric, errors='coerce').dropna()
+        # Convertir los datos de entrada en un tensor
+        input_tensor = torch.tensor(input_data.values, dtype=torch.float32)
 
-        # Verificar si input_data sigue teniendo datos válidos después del procesamiento
-        if input_data.empty:
-            raise ValueError("El input_data no tiene datos válidos después de limpiar los valores no numéricos.")
-
-        # Convertir los datos de entrada en un tensor, preservando columnas categóricas si es necesario
-        input_tensor = torch.tensor(input_data[numeric_columns].values, dtype=torch.float32)
+        # Verificar el tamaño del tensor
+        print(f"Tamaño del tensor de entrada: {input_tensor.shape}")
 
         # Realizar la predicción utilizando el modelo
         prediction = model(input_tensor)
@@ -83,3 +85,4 @@ def predict(model, input_data):
         # Manejar el error e imprimir detalles para depuración
         print(f"Error durante la predicción: {e}")
         raise
+
