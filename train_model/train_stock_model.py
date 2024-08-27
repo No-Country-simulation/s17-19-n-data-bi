@@ -7,7 +7,7 @@ Original file is located at
     https://colab.research.google.com/drive/1_X1kcvtCX7PxFi9LwQzqdQfO2PsCZ3v5
 """
 
-!pip install streamlit python-dotenv google-generativeai torch --quiet
+pip install streamlit python-dotenv google-generativeai torch --quiet
 
 import pandas as pd
 import torch
