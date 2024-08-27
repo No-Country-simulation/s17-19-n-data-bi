@@ -10,6 +10,10 @@ def show_stock_result(stock_data, id_sucursal, skuagr_2):
         (stock_data['skuagr_2'] == skuagr_2)
     ]
 
+    # Mostrar los datos filtrados para depuración
+    st.write("Datos filtrados:")
+    st.write(filtered_data)
+
     # Mostrar el resultado o un mensaje si no se encuentra nada
     if not filtered_data.empty:
         st.write("Resultados de la consulta:")
