@@ -26,10 +26,10 @@ def stock_verification():
     stock_data = load_stock_data()
 
     # Mostrar los datos cargados para depuración
-    st.write("Datos cargados:")
-    st.write(stock_data)  # Muestra las primeras filas del DataFrame
+    st.write("Disponibilidad de Datos Actuales:")
+    st.write(stock_data)
 
-    st.title("Verificación de Stock en Sucursales")
+    st.title("Aplicar Filtro de Verificación de Stock en Sucursales")
 
     # Crear el formulario para ingresar los datos
     with st.form(key='stock_form'):
