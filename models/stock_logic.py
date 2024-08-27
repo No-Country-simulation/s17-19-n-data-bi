@@ -1,9 +1,14 @@
 import streamlit as st
 import torch
 from models.inference import load_model, predict
+from models.stock_result import load_stock_data
 
 def stock_verification():
     st.title("Verificación de Stock en Sucursales")
+    
+    # Cargar los datos de stock
+    stock_data = load_stock_data()
+    
     model = load_model("stock")
 
     if model:
@@ -18,9 +23,15 @@ def stock_verification():
         # Solo ejecutar la predicción si se presiona el botón de submit
         if submit_button:
             try:
-                input_data = torch.tensor([float(id_sucursal), float(skuagr_2)])
-                result = predict(model, input_data)
-                st.write(f'Resultado de la petición: {result}')
+                # Filtrar los datos de stock para la sucursal y SKU ingresados
+                resultado = stock_data[(stock_data['id_sucursal'] == int(id_sucursal)) & 
+                                       (stock_data['skuagr_2'] == skuagr_2)]
+                
+                if resultado.empty:
+                    st.warning("No se encontraron registros para los valores ingresados.")
+                else:
+                    # Mostrar el resultado en Streamlit
+                    st.write(resultado)
             except ValueError:
                 st.error("Por favor ingrese valores numéricos válidos.")
             except Exception as e:
