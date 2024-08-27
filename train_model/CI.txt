@@ -1,1 +1,2 @@
-
+# Se implementó un pipeline CI/CD para actualizar el Stock disponible en las Sucursales y así
+# reentrenar nuevamente el modelo de Machine Learning.
