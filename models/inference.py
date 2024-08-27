@@ -89,9 +89,3 @@ def predict(model, input_data):
         # Manejar el error e imprimir detalles para depuración
         print(f"Error durante la predicción: {e}")
         raise
-
-    except Exception as e:
-        # Manejar el error e imprimir detalles para depuración
-        print(f"Error durante la predicción: {e}")
-        raise
-
