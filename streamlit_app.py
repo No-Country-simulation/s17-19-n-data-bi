@@ -133,9 +133,6 @@ if st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
             st.write("### Previsión generada con GenAI:")
             st.success(st.session_state['generated_prevision'])
 
-    # Verificar el estado actual en la consola de Streamlit (puedes quitar esta parte después de probar)
-    st.write("Estado actual de la sesión:", st.session_state)
-
 elif st.session_state['selected_button'] == 'MARKETING INTELLIGENCE':
     st.title('Sistema de Recomendación de Precios y Combos')
     with st.form(key='marketing_form'):
