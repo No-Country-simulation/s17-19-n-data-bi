@@ -4,7 +4,6 @@ import torch.nn as nn
 import os
 from sklearn.preprocessing import LabelEncoder
 
-# Definición de la estructura del modelo, común para todos los casos
 class BaseModel(nn.Module):
     def __init__(self, input_size):
         super(BaseModel, self).__init__()
@@ -45,7 +44,7 @@ def load_model(model_name):
     
     if os.path.exists(model_path):
         # Cargar el estado del modelo
-        model.load_state_dict(torch.load(model_path, weights_only=True))
+        model.load_state_dict(torch.load(model_path))
         model.eval()  # Cambiar el modelo a modo de evaluación
         return model
     else:
@@ -75,11 +74,21 @@ def predict(model, input_data):
         # Verificar el tamaño del tensor
         print(f"Tamaño del tensor de entrada: {input_tensor.shape}")
 
+        # Comprobar si el tamaño coincide con el esperado por el modelo
+        expected_input_size = model.fc1.in_features
+        if input_tensor.shape[1] != expected_input_size:
+            raise ValueError(f"El tamaño de las características del tensor de entrada {input_tensor.shape[1]} no coincide con el esperado {expected_input_size}.")
+
         # Realizar la predicción utilizando el modelo
         prediction = model(input_tensor)
 
         # Retornar el resultado de la predicción
         return prediction
+
+    except Exception as e:
+        # Manejar el error e imprimir detalles para depuración
+        print(f"Error durante la predicción: {e}")
+        raise
 
     except Exception as e:
         # Manejar el error e imprimir detalles para depuración
