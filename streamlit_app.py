@@ -153,7 +153,7 @@ if st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
 
     if st.session_state['show_prevision_generativa']:
         st.subheader('Previsión Con GenAI')
-        st.write("Escribe una previsión de consumo que se desea saber según estación del año, contexto epidemiológico, país y región de ese país.")
+        st.write("Escribe una previsión de consumo que se desea saber según estación del año, contexto epidemiológico, país y región. Especifica el idioma de respuesta.")
         
         user_prompt = st.text_area("PROMPT:", height=250)
         
@@ -178,8 +178,6 @@ if st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
         if st.session_state['generated_prevision']:
             st.write("### Previsión generada con GenAI:")
             st.success(st.session_state['generated_prevision'])
-
-    st.write("Estado actual de la sesión:", st.session_state)
 
 elif st.session_state['selected_button'] == 'MARKETING INTELLIGENCE':
     st.title('Sistema de Recomendación de Precios y Combos')
