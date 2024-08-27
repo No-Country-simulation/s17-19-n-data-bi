@@ -68,7 +68,7 @@ if st.sidebar.button('AFINIDAD DE PRODUCTOS'):
 
 # Gestionar la lógica basada en el botón presionado
 if st.session_state['selected_button'] == 'GESTIÓN DE STOCKS':
-    st.title("Gestión de Stocks")
+    st.title("Verificación de Stock Disponible en Sucursales")
     if stock_model is not None:
         stock_verification(stock_model)
     else:
