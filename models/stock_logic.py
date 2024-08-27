@@ -34,8 +34,6 @@ def stock_verification():
     # Cargar el modelo de inferencia
     model = load_model('stock')
 
-    st.title("Aplicar Filtro de Verificación de Stock en Sucursales")
-
     # Crear el formulario para ingresar los datos
     with st.form(key='stock_form'):
         id_sucursal = st.text_input("Ingrese el ID de la sucursal", key="id_sucursal")
