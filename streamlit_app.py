@@ -75,7 +75,7 @@ if st.session_state['selected_button'] == 'GESTIÓN DE STOCKS':
         st.warning("El modelo de stock no está disponible. No se puede verificar el stock.")
 
 elif st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
-    st.title("Previsión de Consumo")
+    st.title("Selecciona tu Consulta de Interés")
     col1, col2 = st.columns(2)
     with col1:
         prevision_basada_datos = st.button('PREVISIÓN BASADA EN DATOS')
