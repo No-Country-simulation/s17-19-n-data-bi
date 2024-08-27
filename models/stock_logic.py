@@ -1,7 +1,7 @@
 import streamlit as st
 import torch
-import pandas as pd
 from models.inference import load_model, predict
+import pandas as pd
 
 def stock_verification():
     st.title("Verificación de Stock en Sucursales")
@@ -20,13 +20,20 @@ def stock_verification():
         if submit_button:
             try:
                 # Convertir id_sucursal a número entero (sin comas)
-                id_sucursal = id_sucursal.replace(",", "")
+                id_sucursal = id_sucursal.replace(",", "").strip()
+                skuagr_2 = skuagr_2.strip()
+
+                # Asegurarse de que id_sucursal es un número
+                if not id_sucursal.isdigit():
+                    st.error("El ID de la sucursal debe ser un número entero.")
+                    return
+
                 # Convertir datos a flotantes para el modelo
-                input_data = torch.tensor([float(id_sucursal), float(skuagr_2)])  
+                input_data = torch.tensor([float(id_sucursal), float(skuagr_2)])
                 result = predict(model, input_data)
                 
                 # Cargar y filtrar los datos de stock
-                stock_data = load_stock_data()  # Esta función se llama aquí
+                stock_data = load_stock_data()
                 filtered_data = stock_data[
                     (stock_data['id_sucursal'] == int(id_sucursal)) & 
                     (stock_data['skuagr_2'] == skuagr_2)
@@ -58,5 +65,10 @@ def load_stock_data():
     stock_actualizado['hay_stock'] = stock_actualizado['stock_disponible'] > 0
     stock_actualizado['hay_stock'] = stock_actualizado['hay_stock'].astype(int)
 
+    # Asegurarse de que las columnas tienen los tipos correctos
+    stock_actualizado['id_sucursal'] = stock_actualizado['id_sucursal'].astype(int)
+    stock_actualizado['skuagr_2'] = stock_actualizado['skuagr_2'].astype(str)
+
     return stock_actualizado
+
 
