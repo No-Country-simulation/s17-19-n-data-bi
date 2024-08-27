@@ -8,7 +8,7 @@ def load_stock_data():
 
     # Crear la tabla de stock inicial y calcular el stock disponible
     stock_inicial = pd.merge(sucursales[['id_sucursal']], productos[['skuagr_2']], how='cross')
-    stock_inicial['stock_inicial'] = 100  # Asignar 100 unidades como stock inicial
+    stock_inicial['stock_inicial'] = 300  # Asignar 100 unidades como stock inicial
 
     # Sumar las transacciones para cada combinación de sucursal y producto
     transacciones_agrupadas = data.groupby(['id_sucursal', 'skuagr_2']).agg({'cantidad_dispensada': 'sum'}).reset_index()
