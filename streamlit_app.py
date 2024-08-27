@@ -15,17 +15,6 @@ load_dotenv()
 # Obtener la API Key de Gemini
 gemini_api_key = os.getenv('GEMINI_API_KEY')
 
-# Verificar si la API Key de Gemini se encontró y configurarla
-if gemini_api_key:
-    try:
-        genai.configure(api_key=gemini_api_key)
-        st.success("API de Gemini configurada correctamente.")
-    except Exception as e:
-        st.error(f"Error al configurar la API de Gemini: {e}")
-else:
-    st.error("No se encontró la API Key de Gemini. Por favor, verifica tu archivo .env.")
-
-
 # Cargar el logo
 st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
 
