@@ -32,8 +32,8 @@ def stock_verification():
     st.title("Aplicar Filtro de Verificación de Stock en Sucursales")
 
     # Inicializar session state para mantener los resultados entre recargas
-    if 'filtered_data' not in st.form:
-        st.form['filtered_data'] = None
+    if 'filtered_data' not in st.session_state:
+        st.session_state['filtered_data'] = None
 
     # Crear el formulario para ingresar los datos
     with st.form(key='stock_form'):
