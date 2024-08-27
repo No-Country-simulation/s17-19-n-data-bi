@@ -58,30 +58,30 @@ if gestion_stocks:
     else:
         st.warning("El modelo de stock no está disponible. No se puede verificar el stock.")
 
-if 'prevision_basada_datos' not in st.session_state:
-    st.session_state.prevision_basada_datos = False
-
-if 'prevision_generativa' not in st.session_state:
-    st.session_state.prevision_generativa = False
-
 if prevision_consumo:
     st.title("Selecciona el Método de Previsión")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button('PREVISIÓN BASADA EN DATOS', key="btn_prevision_basada_datos"):
-            st.session_state.prevision_basada_datos = True
-            st.session_state.prevision_generativa = False
-    with col2:
-        if st.button('PREVISIÓN CON GenAI', key="btn_prevision_generativa"):
-            st.session_state.prevision_generativa = True
-            st.session_state.prevision_basada_datos = False
 
-    if st.session_state.prevision_basada_datos:
+    with st.form(key='prevision_form'):
+        col1, col2 = st.columns(2)
+        metodo = None
+        with col1:
+            prevision_basada_datos = st.form_submit_button('PREVISIÓN BASADA EN DATOS')
+            if prevision_basada_datos:
+                metodo = 'datos'
+        with col2:
+            prevision_generativa = st.form_submit_button('PREVISIÓN CON GenAI')
+            if prevision_generativa:
+                metodo = 'generativa'
+
+        # Almacenamos el método seleccionado en una variable
+        st.session_state['metodo_seleccionado'] = metodo
+
+    # Mostrar el contenido basado en el método seleccionado
+    if st.session_state.get('metodo_seleccionado') == 'datos':
         st.subheader('Previsión Basada en Datos')
         st.markdown("[Visualización de Power BI](URL_DE_TU_POWER_BI)")
 
-    if st.session_state.prevision_generativa:
+    elif st.session_state.get('metodo_seleccionado') == 'generativa':
         st.subheader('Previsión Con GenAI')
         st.write("Escribe una previsión de consumo que se desea saber según estación del año, contexto epidemiológico, país y región de ese país.")
         
@@ -108,11 +108,15 @@ if prevision_consumo:
 
 if marketing_intelligence:
     st.title('Sistema de Recomendación de Precios y Combos')
-    country = st.text_input('Ingrese el país:')
-    region = st.text_input('Ingrese la región / estado / provincia:')
-    therapeutic_group = st.text_input('Ingrese el grupo terapéutico:')
+    with st.form(key='marketing_form'):
+        country = st.text_input('Ingrese el país:')
+        region = st.text_input('Ingrese la región / estado / provincia:')
+        therapeutic_group = st.text_input('Ingrese el grupo terapéutico:')
+        
+        # Botón para enviar el formulario
+        submit_button = st.form_submit_button('Obtener Sugerencias de Promociones')
 
-    if st.button('Obtener Sugerencias de Promociones'):
+    if submit_button:
         suggestions = get_promotion_suggestions(country, region, therapeutic_group)
         if suggestions:
             st.subheader('Sugerencias de Promociones')
@@ -123,9 +127,13 @@ if marketing_intelligence:
 
 if afinidad_productos:
     st.title("Posibles Demandas de Productos Relacionados")
-    prompt = st.text_input("Ingrese un producto o categoría para ver productos relacionados")
+    with st.form(key='afinidad_form'):
+        prompt = st.text_input("Ingrese un producto o categoría para ver productos relacionados")
+        
+        # Botón para enviar el formulario
+        submit_button = st.form_submit_button("Generar Afinidad de Productos")
 
-    if st.button("Generar Afinidad de Productos"):
+    if submit_button:
         if prompt:
             suggestions = get_related_products(prompt)
             if suggestions:
@@ -134,4 +142,3 @@ if afinidad_productos:
                     st.write(f"Producto relacionado {i}: {suggestion}")
         else:
             st.warning("Por favor, ingrese un producto o categoría.")
-
