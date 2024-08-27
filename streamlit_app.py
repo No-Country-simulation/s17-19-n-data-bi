@@ -71,7 +71,7 @@ if st.sidebar.button('PRODUCTOS CON COBERTURA O SIN COBERTURA'):
 if st.session_state['selected_button'] == 'GESTIÓN DE STOCKS':
     st.title("Verificación de Stock Disponible en Sucursales")
     if stock_model is not None:
-        stock_verification(stock_model)
+        stock_verification()
     else:
         st.warning("El modelo de stock no está disponible. No se puede verificar el stock.")
 
