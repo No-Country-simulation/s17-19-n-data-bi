@@ -34,24 +34,3 @@ def get_promotion_suggestions(country, region, therapeutic_group, num_suggestion
 
     except Exception as e:
         return [f"Error al generar sugerencias: {e}"]
-
-# Streamlit app
-configure_gemini_api()
-
-st.title("Sugerencias de Promociones de Marketing Farmacéutico")
-
-with st.form(key='marketing_form'):
-    country = st.text_input("País")
-    region = st.text_input("Región")
-    therapeutic_group = st.text_input("Grupo Terapéutico")
-    num_suggestions = st.number_input("Número de Sugerencias", min_value=1, max_value=10, value=5)
-    
-    # Botón para enviar el formulario
-    submit_button = st.form_submit_button(label='Obtener Sugerencias')
-
-# Solo generar sugerencias si se ha enviado el formulario
-if submit_button:
-    suggestions = get_promotion_suggestions(country, region, therapeutic_group, num_suggestions)
-    st.write("Sugerencias de Promociones:")
-    for i, suggestion in enumerate(suggestions, start=1):
-        st.write(f"{i}. {suggestion}")
