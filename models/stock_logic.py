@@ -31,15 +31,18 @@ def stock_verification():
 
     st.title("Aplicar Filtro de Verificación de Stock en Sucursales")
 
+    # Inicializar session state para mantener los resultados entre recargas
+    if 'filtered_data' not in st.session_state:
+        st.session_state['filtered_data'] = None
+
     # Crear el formulario para ingresar los datos
     with st.form(key='stock_form'):
-        id_sucursal = st.text_input("Ingrese el ID de la sucursal")
-        skuagr_2 = st.text_input("Ingrese el SKU del producto")
+        id_sucursal = st.text_input("Ingrese el ID de la sucursal", key="id_sucursal")
+        skuagr_2 = st.text_input("Ingrese el SKU del producto", key="skuagr_2")
 
         # Botón para enviar el formulario
         submit_button = st.form_submit_button(label='Verificar Stock')
 
-    
     # Verificar si se han ingresado datos válidos y mostrar resultados
     if submit_button:
         if id_sucursal and skuagr_2:
