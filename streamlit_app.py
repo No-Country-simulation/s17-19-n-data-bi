@@ -10,8 +10,10 @@ from dotenv import load_dotenv
 
 # Cargar las variables de entorno
 load_dotenv()
+
 # Obtener la API Key de Gemini
 gemini_api_key = os.getenv('GEMINI_API_KEY')
+
 # Configurar la API generativa de Gemini
 configure_gemini_api()
 
@@ -41,29 +43,33 @@ button_style = """
         color: dark blue;
         font-size: 16px;
         border-radius: 10px;
+        margin-bottom: 10px;
     }
     </style>
 """
 st.markdown(button_style, unsafe_allow_html=True)
 
 # Crear botones en el menú lateral
-option = st.sidebar.radio("Selecciona una opción", ('GESTIÓN DE STOCKS', 'PREVISIÓN DE CONSUMO', 'MARKETING INTELLIGENCE', 'AFINIDAD DE PRODUCTOS'))
+gestion_stocks = st.sidebar.button('GESTIÓN DE STOCKS')
+prevision_consumo = st.sidebar.button('PREVISIÓN DE CONSUMO')
+marketing_intelligence = st.sidebar.button('MARKETING INTELLIGENCE')
+afinidad_productos = st.sidebar.button('AFINIDAD DE PRODUCTOS')
 
-# Gestionar la lógica de cada opción
-if option == 'GESTIÓN DE STOCKS':
+# Gestionar la lógica de cada botón
+if gestion_stocks:
+    st.title("Gestión de Stocks")
     if stock_model is not None:
         stock_verification(stock_model)
     else:
         st.warning("El modelo de stock no está disponible. No se puede verificar el stock.")
 
-elif option == 'PREVISIÓN DE CONSUMO':
-    st.title("Selecciona el Método de Previsión")
-    
+if prevision_consumo:
+    st.title("Previsión de Consumo")
     col1, col2 = st.columns(2)
     with col1:
-        prevision_basada_datos = st.button('PREVISIÓN BASADA EN DATOS', key="btn_prevision_basada_datos")
+        prevision_basada_datos = st.button('PREVISIÓN BASADA EN DATOS')
     with col2:
-        prevision_generativa = st.button('PREVISIÓN CON GenAI', key="btn_prevision_generativa")
+        prevision_generativa = st.button('PREVISIÓN CON GenAI')
 
     if prevision_basada_datos:
         st.subheader('Previsión Basada en Datos')
@@ -93,7 +99,7 @@ elif option == 'PREVISIÓN DE CONSUMO':
                 except Exception as e:
                     st.error(f"Error al generar la previsión: {e}")
 
-elif option == 'MARKETING INTELLIGENCE':
+if marketing_intelligence:
     st.title('Sistema de Recomendación de Precios y Combos')
     with st.form(key='marketing_form'):
         country = st.text_input('Ingrese el país:')
@@ -118,7 +124,7 @@ elif option == 'MARKETING INTELLIGENCE':
             except Exception as e:
                 st.error(f"Se produjo un error al obtener las sugerencias: {e}")
 
-elif option == 'AFINIDAD DE PRODUCTOS':
+if afinidad_productos:
     st.title("Posibles Demandas de Productos Relacionados")
     with st.form(key='afinidad_form'):
         prompt = st.text_input("Ingrese un producto o categoría para ver productos relacionados")
