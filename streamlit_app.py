@@ -1,5 +1,3 @@
-# Código en proceso aún...
-
 import streamlit as st
 import torch
 import os
@@ -37,6 +35,16 @@ button_style = """
 """
 st.markdown(button_style, unsafe_allow_html=True)
 
+# Cargar el modelo una vez al iniciar la aplicación
+try:
+    stock_model = load_model('stock')  # Cargar el modelo de stock
+except FileNotFoundError as e:
+    st.error(f"Error al cargar el modelo de stock: {e}")
+    stock_model = None  # Establecer el modelo como None si no se carga correctamente
+except RuntimeError as e:
+    st.error(f"Error al inicializar el modelo de stock: {e}")
+    stock_model = None
+
 # Crear botones en el menú lateral
 gestion_stocks = st.sidebar.button('GESTIÓN DE STOCKS')
 prevision_consumo = st.sidebar.button('PREVISIÓN DE CONSUMO')
@@ -45,7 +53,10 @@ afinidad_productos = st.sidebar.button('AFINIDAD DE PRODUCTOS')
 
 # Gestionar la lógica de cada botón
 if gestion_stocks:
-    stock_verification()
+    if stock_model is not None:
+        stock_verification(stock_model)  # Pasar el modelo cargado a la función
+    else:
+        st.warning("El modelo de stock no está disponible. No se puede verificar el stock.")
 
 if prevision_consumo:
     st.title("Selecciona el Método de Previsión")
@@ -113,3 +124,4 @@ if afinidad_productos:
                     st.write(f"Producto relacionado {i}: {suggestion}")
         else:
             st.warning("Por favor, ingrese un producto o categoría.")
+
