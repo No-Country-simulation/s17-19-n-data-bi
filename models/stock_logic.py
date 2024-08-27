@@ -10,6 +10,10 @@ def show_stock_result(stock_data, id_sucursal, skuagr_2):
         (stock_data['skuagr_2'] == skuagr_2)
     ]
 
+    # Mostrar los datos filtrados para depuración
+    st.write("Datos filtrados:")
+    st.write(filtered_data)
+
     # Mostrar el resultado o un mensaje si no se encuentra nada
     if not filtered_data.empty:
         st.write("Resultados de la consulta:")
@@ -21,7 +25,15 @@ def stock_verification():
     # Cargar los datos una vez
     stock_data = load_stock_data()
 
-    st.title("Verificación de Stock en Sucursales")
+    # Mostrar los datos cargados para depuración
+    st.write("Disponibilidad de Datos Actuales:")
+    st.write(stock_data)
+
+    st.title("Aplicar Filtro de Verificación de Stock en Sucursales")
+
+    # Inicializar session state para mantener los resultados entre recargas
+    if 'filtered_data' not in st.form:
+        st.form['filtered_data'] = None
 
     # Crear el formulario para ingresar los datos
     with st.form(key='stock_form'):
@@ -34,7 +46,19 @@ def stock_verification():
     # Verificar si se han ingresado datos válidos y mostrar resultados
     if submit_button:
         if id_sucursal and skuagr_2:
-            # Mostrar los resultados filtrados
-            show_stock_result(stock_data, id_sucursal, skuagr_2)
+            # Filtrar los datos por los inputs del usuario
+            filtered_data = stock_data[
+                (stock_data['id_sucursal'] == id_sucursal) & 
+                (stock_data['skuagr_2'] == skuagr_2)
+            ]
+
+            # Guardar los resultados en session state
+            st.form['filtered_data'] = filtered_data
+
+    # Mostrar los resultados si están disponibles
+    if st.form['filtered_data'] is not None:
+        if not st.form['filtered_data'].empty:
+            st.write("Resultados de la consulta:")
+            st.write(st.form['filtered_data'])
         else:
-            st.error("Por favor, ingrese ambos campos: ID de Sucursal y SKU del producto.")
+            st.write("No se encontraron registros para la sucursal y SKU proporcionados.")
