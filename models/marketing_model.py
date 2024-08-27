@@ -55,9 +55,3 @@ if submit_button:
     st.write("Sugerencias de Promociones:")
     for i, suggestion in enumerate(suggestions, start=1):
         st.write(f"{i}. {suggestion}")
-
-        else:
-            return ["No se pudo generar una respuesta adecuada."]
-
-    except Exception as e:
-        return [f"Error al generar sugerencias: {e}"]
