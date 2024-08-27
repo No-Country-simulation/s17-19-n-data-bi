@@ -54,5 +54,3 @@ def stock_verification():
         else:
             st.warning("Por favor, ingrese tanto el ID de la sucursal como el SKU del producto.")
 
-# Llamada a la función principal para ejecutar la funcionalidad de verificación
-stock_verification()
