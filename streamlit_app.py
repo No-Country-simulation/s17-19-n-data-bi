@@ -57,6 +57,8 @@ if st.sidebar.button('GESTIÓN DE STOCKS'):
 
 if st.sidebar.button('PREVISIÓN DE CONSUMO'):
     st.session_state['selected_button'] = 'PREVISIÓN DE CONSUMO'
+    st.session_state['show_prevision_generativa'] = False
+    st.session_state['generated_prevision'] = None
 
 if st.sidebar.button('MARKETING INTELLIGENCE'):
     st.session_state['selected_button'] = 'MARKETING INTELLIGENCE'
@@ -84,12 +86,6 @@ if 'selected_button' not in st.session_state:
 if 'show_prevision_generativa' not in st.session_state:
     st.session_state['show_prevision_generativa'] = False
 if 'generated_prevision' not in st.session_state:
-    st.session_state['generated_prevision'] = None
-
-# Manejando el estado del botón de la barra lateral
-if st.sidebar.button('PREVISIÓN DE CONSUMO'):
-    st.session_state['selected_button'] = 'PREVISIÓN DE CONSUMO'
-    st.session_state['show_prevision_generativa'] = False
     st.session_state['generated_prevision'] = None
 
 if st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
