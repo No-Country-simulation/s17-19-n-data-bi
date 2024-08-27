@@ -43,15 +43,23 @@ model = genai.GenerativeModel(
 )
 
 def get_promotion_suggestions(country, region, therapeutic_group):
-    prompt = f"Genera posibles promociones de productos farmacéuticos o de belleza para el grupo terapéutico de {therapeutic_group} en {country}, {region}. Por favor, proporcione las sugerencias de manera clara y directa, sin ningún formato adicional."
+    prompt = (
+        f"Genera una lista de 10 sugerencias específicas de promociones para productos farmacéuticos o de belleza "
+        f"relacionados con {therapeutic_group} en {country}, {region}. Cada sugerencia debe ser clara y enfocada en "
+        f"promociones prácticas para consumidores. Evita descripciones genéricas y concéntrate en ofertas específicas."
+    )
 
     try:
         response = model.generate_content([prompt])
 
         if response and hasattr(response, 'text'):
-            return response.text.strip()  # Devolver el texto tal cual lo genera la API
+            suggestions = response.text.strip().splitlines()
+
+            # Filtrar líneas vacías y devolver hasta 10 sugerencias
+            return [s for s in suggestions if s][:10]
+
         else:
-            return "No se pudieron generar sugerencias."
+            return ["No se pudieron generar sugerencias."]
     
     except Exception as e:
-        raise RuntimeError(f"Error al generar las sugerencias: {e}")       
+        raise RuntimeError(f"Error al generar las sugerencias: {e}")
