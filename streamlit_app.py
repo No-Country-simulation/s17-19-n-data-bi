@@ -108,8 +108,20 @@ if st.session_state['selected_button'] == 'GESTIÓN DE STOCKS':
     else:
         st.warning("El modelo de stock no está disponible. No se puede verificar el stock.")
 
-def fake_generate_text(prompt):
-    return f"Resultado de la previsión para: {prompt}"
+def generate_gemini_response(input_prompt):
+    try:
+        # Generar contenido basado en el prompt del usuario
+        response = model.generate_content([input_prompt])
+        if response and hasattr(response[0], 'text'):
+            return response[0].text
+        else:
+            return "No se pudo generar una respuesta adecuada."
+    except IndexError as e:
+        st.error(f"IndexError generating response: {e}")
+        return "Error de índice al generar la respuesta."
+    except Exception as e:
+        st.error(f"Error generating response: {e}")
+        return "Error generando la respuesta."
 
 # Estado inicial
 if 'selected_button' not in st.session_state:
@@ -132,7 +144,7 @@ if st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
         st.subheader('Previsión Basada en Datos')
         st.markdown("[Visualización de Power BI](URL_DE_TU_POWER_BI)")
 
-    if prevision_generativa:
+if prevision_generativa:
         st.session_state['show_prevision_generativa'] = True
 
     if st.session_state['show_prevision_generativa']:
@@ -148,8 +160,8 @@ if st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
                 st.write("Procesando tu solicitud...")
     
                 try:
-                    # Simulación de la generación de previsión
-                    response = fake_generate_text(prompt=user_prompt)
+                    # Usar la función adaptada para generar la previsión
+                    response = generate_gemini_response(user_prompt)
                     
                     if response:
                         st.session_state['generated_prevision'] = response
@@ -159,10 +171,11 @@ if st.session_state['selected_button'] == 'PREVISIÓN DE CONSUMO':
                 except Exception as e:
                     st.error(f"Error al generar la previsión: {e}")
 
-        # Mostrar la previsión generada en un lugar visible
         if st.session_state['generated_prevision']:
             st.write("### Previsión generada con GenAI:")
             st.success(st.session_state['generated_prevision'])
+
+    st.write("Estado actual de la sesión:", st.session_state)
 
 elif st.session_state['selected_button'] == 'MARKETING INTELLIGENCE':
     st.title('Sistema de Recomendación de Precios y Combos')
