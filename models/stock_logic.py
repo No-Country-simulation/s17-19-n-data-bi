@@ -39,10 +39,21 @@ def stock_verification():
         # Botón para enviar el formulario
         submit_button = st.form_submit_button(label='Verificar Stock')
 
+    
     # Verificar si se han ingresado datos válidos y mostrar resultados
     if submit_button:
         if id_sucursal and skuagr_2:
-            show_stock_result(stock_data, id_sucursal, skuagr_2)
+            # Filtrar los datos por los inputs del usuario
+            filtered_data = stock_data[
+                (stock_data['id_sucursal'] == id_sucursal) & 
+                (stock_data['skuagr_2'] == skuagr_2)
+            ]
+
+            # Mostrar el resultado o un mensaje si no se encuentra nada
+            if not filtered_data.empty:
+                st.write("Resultados de la consulta:")
+                st.write(filtered_data)
+            else:
+                st.write("No se encontraron registros para la sucursal y SKU proporcionados.")
         else:
             st.warning("Por favor, ingrese ambos valores: ID de sucursal y SKU del producto.")
-
