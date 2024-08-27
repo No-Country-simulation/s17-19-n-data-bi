@@ -3,21 +3,17 @@ import torch
 from models.inference import load_model, predict
 from models.stock_result import load_stock_data
 
-# Cargar el modelo una vez
-model = load_model("stock")
-
-# Cargar los datos de stock una vez
-try:
-    stock_data = load_stock_data()
-except Exception as e:
-    st.error(f"Error al cargar los datos de stock: {e}")
-    stock_data = None
-
 def stock_verification():
     st.title("Verificación de Stock en Sucursales")
     
-    if model is None or stock_data is None:
-        st.error("No se pudo cargar el modelo o los datos. Por favor, verifica el entorno.")
+    # Cargar el modelo una vez
+    model = load_model("stock")
+
+    # Cargar los datos de stock
+    try:
+        stock_data = load_stock_data()
+    except Exception as e:
+        st.error(f"Error al cargar los datos de stock: {e}")
         return
     
     with st.form(key='stock_form'):
