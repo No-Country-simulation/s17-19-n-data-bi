@@ -27,7 +27,7 @@ def stock_verification():
 
     # Mostrar los datos cargados para depuración
     st.write("Datos cargados:")
-    st.write(stock_data.head())  # Muestra las primeras filas del DataFrame
+    st.write(stock_data)  # Muestra las primeras filas del DataFrame
 
     st.title("Verificación de Stock en Sucursales")
 
