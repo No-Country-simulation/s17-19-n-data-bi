@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 try:
     GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+    print("GEMINI_API_KEY:", GEMINI_API_KEY)  # Agregar esta línea para verificar la clave
 except KeyError:
     raise Exception("API key for Gemini not found. Make sure it's set in the secrets.toml file.")
 
