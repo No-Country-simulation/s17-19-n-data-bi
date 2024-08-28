@@ -8,10 +8,10 @@ from models.marketing_model import get_promotion_suggestions
 from models.afinidad_model import get_affinity_recommendations
 from dotenv import load_dotenv
 
-
-GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-print("GEMINI_API_KEY:", GEMINI_API_KEY)  # Agregar esta línea para verificar la clave
-except KeyError:
+if "GEMINI_API_KEY" in st.secrets:
+    GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+    print("GEMINI_API_KEY:", GEMINI_API_KEY)  # Verificar la clave
+else:
     raise Exception("API key for Gemini not found. Make sure it's set in the secrets.toml file.")
 
 genai.configure(api_key=GEMINI_API_KEY)
