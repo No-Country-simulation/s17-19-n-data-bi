@@ -41,12 +41,6 @@ safety_settings = [
     }
 ]
 
-model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash-latest",
-    generation_config=generation_config,
-    safety_settings=safety_settings
-)
-
 # Cargar el modelo de stock una vez al iniciar la aplicación
 try:
     stock_model = load_model('stock')
