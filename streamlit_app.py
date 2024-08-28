@@ -206,26 +206,27 @@ elif st.session_state['selected_button'] == 'MARKETING INTELLIGENCE':
 elif st.session_state['selected_button'] == 'AFINIDAD DE PRODUCTOS':
     st.title("Posibles Demandas de Productos Relacionados")
     with st.form(key='afinidad_form'):
-        product = st.text_input('Ingrese un producto:')
-        country = st.text_input('Ingrese el país:')
-        region = st.text_input('Ingrese la región / estado / provincia:')
+        prompt = st.text_input("Ingrese un contexto, un producto o una categoría para ver combinaciones relacionadas")
         
         # Botón para enviar el formulario
         submit_button = st.form_submit_button("Generar Afinidad de Productos")
 
     if submit_button:
-        if not product or not country or not region:
-            st.warning("Por favor, complete todos los campos antes de generar afinidades.")
-        else:
+        if prompt:
             try:
-                suggestions = get_affinity_recommendations(product, country, region)
+                # Llamada a la función para obtener afinidades de productos
+                suggestions = get_affinity_recommendations(prompt)
+                
                 if suggestions:
                     st.subheader("Productos relacionados sugeridos:")
-                    st.write("\n".join(suggestions))
+                    for i, suggestion in enumerate(suggestions, 1):
+                        st.write(f"Producto relacionado {i}: {suggestion}")
                 else:
                     st.warning("No se encontraron productos relacionados.")
             except Exception as e:
                 st.error(f"Se produjo un error al obtener los productos relacionados: {e}")
+        else:
+            st.warning("Por favor, ingrese un producto o categoría.")
 
 elif st.session_state['selected_button'] == 'PRODUCTOS CON COBERTURA O SIN COBERTURA':
     st.title("Productos con Cobertura o Sin Cobertura")
