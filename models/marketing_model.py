@@ -51,13 +51,13 @@ def get_promotion_suggestions(country, region, therapeutic_group):
     )
 
     try:
-        response = model.generate_content([prompt])
-
+        response = genai.generate_text(prompt)
+        
         if response and hasattr(response, 'text'):
             suggestions = response.text.strip().splitlines()
 
             # Filtrar líneas vacías y devolver hasta 10 sugerencias
-            return [s for s in suggestions if s][:11]
+            return [s for s in suggestions if s][:10]
 
         else:
             return ["No se pudieron generar sugerencias."]
