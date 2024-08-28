@@ -71,9 +71,3 @@ def get_promotion_suggestions(country, region, therapeutic_group):
     except Exception as e:
         st.error(f"Error al generar las sugerencias: {e}")
         return ["Error al generar las sugerencias."]
-
-#         else:
-#             return ["No se pudieron generar sugerencias."]
-    
-#     except Exception as e:
-#         raise RuntimeError(f"Error al generar las sugerencias: {e}")
