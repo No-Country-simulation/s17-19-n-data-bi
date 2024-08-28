@@ -3,7 +3,6 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
-# Configura la API de Gemini
 GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     raise Exception("API key for Gemini not found. Make sure it's set in the secrets.toml file.")
