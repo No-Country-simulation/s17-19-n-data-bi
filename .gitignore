@@ -1,3 +1,1 @@
-.env
 .streamlit/secrets.toml
-config.json
