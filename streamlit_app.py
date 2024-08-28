@@ -206,25 +206,26 @@ elif st.session_state['selected_button'] == 'MARKETING INTELLIGENCE':
 elif st.session_state['selected_button'] == 'AFINIDAD DE PRODUCTOS':
     st.title("Posibles Demandas de Productos Relacionados")
     with st.form(key='afinidad_form'):
-        prompt = st.text_input("Ingrese un contexto, un producto o una categoría para ver combinaciones relacionadas")
+        product = st.text_input('Ingrese un producto:')
+        country = st.text_input('Ingrese el país:')
+        region = st.text_input('Ingrese la región / estado / provincia:')
         
         # Botón para enviar el formulario
         submit_button = st.form_submit_button("Generar Afinidad de Productos")
 
     if submit_button:
-        if prompt:
+        if not product or not country or not region:
+            st.warning("Por favor, complete todos los campos antes de generar afinidades.")
+        else:
             try:
-                suggestions = get_affinity_recommendations(prompt)
+                suggestions = get_affinity_recommendations(product, country, region)
                 if suggestions:
                     st.subheader("Productos relacionados sugeridos:")
-                    for i, suggestion in enumerate(suggestions, 1):
-                        st.write(f"Producto relacionado {i}: {suggestion}")
+                    st.write("\n".join(suggestions))
                 else:
                     st.warning("No se encontraron productos relacionados.")
             except Exception as e:
                 st.error(f"Se produjo un error al obtener los productos relacionados: {e}")
-        else:
-            st.warning("Por favor, ingrese un producto o categoría.")
 
 elif st.session_state['selected_button'] == 'PRODUCTOS CON COBERTURA O SIN COBERTURA':
     st.title("Productos con Cobertura o Sin Cobertura")
@@ -233,4 +234,3 @@ elif st.session_state['selected_button'] == 'PRODUCTOS CON COBERTURA O SIN COBER
     st.markdown("[Visualización de Power BI PRODUCTOS CON COBERTURA](URL_DE_TU_POWER_BI_1)")
     st.markdown("[Visualización de Power BI PRODUCTOS SIN COBERTURA](URL_DE_TU_POWER_BI_2)")
     st.markdown("[Visualización de Power BI PRODUCTOS GENÉRICOS](URL_DE_TU_POWER_BI_3)")
-
