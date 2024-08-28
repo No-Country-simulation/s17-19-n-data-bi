@@ -55,7 +55,7 @@ def get_promotion_suggestions(country, region, therapeutic_group):
     )
 
     try:
-        response = genai.generate_text(prompt)
+        response = genai.generate_text(prompt=prompt)
         
         if response and hasattr(response, 'text'):
             suggestions = response.text.strip().splitlines()
