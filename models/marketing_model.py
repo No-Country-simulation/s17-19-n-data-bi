@@ -36,12 +36,6 @@ safety_settings = [
     }
 ]
 
-model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash-latest",
-    generation_config=generation_config,
-    safety_settings=safety_settings
-)
-
 def get_promotion_suggestions(country, region, therapeutic_group):
     prompt = (
         f"Genera una lista de al menos 10 sugerencias específicas de promociones para productos farmacéuticos o de belleza "
