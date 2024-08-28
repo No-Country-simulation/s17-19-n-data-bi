@@ -51,7 +51,7 @@ def get_affinity_recommendations(prompt, language="es"):
     )
 
     try:
-        response = genai.generate_text(prompt_text)
+        response = genai.generate_text(prompt=prompt_text)
 
         if response and hasattr(response, 'text'):
             suggestions = response.text.strip().splitlines()
