@@ -58,9 +58,3 @@ def get_affinity_recommendations(prompt):
     
     except Exception as e:
         raise RuntimeError(f"Error al generar las recomendaciones: {e}")
-
-        else:
-            return ["No se pudieron generar recomendaciones."]
-    
-    except Exception as e:
-        raise RuntimeError(f"Error al generar las recomendaciones: {e}")
