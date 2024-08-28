@@ -1,20 +1,11 @@
 import streamlit as st
 import google.generativeai as genai
 import os
-import json
 
-config_path = os.path.join(os.path.dirname(__file__), "config.json")
-with open(config_path, "r") as config_file:
-    config = json.load(config_file)
-
-GEMINI_API_KEY = config.get("GEMINI_API_KEY")
-
-if GEMINI_API_KEY is None:
-    raise Exception("API key for Gemini not found. Make sure it's set in the config.json file.")
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 
 genai.configure(api_key=GEMINI_API_KEY)
 
-# Configuración del modelo y generación
 generation_config = {
     "temperature": 0.4,
     "top_p": 1,
@@ -41,11 +32,9 @@ safety_settings = [
     }
 ]
 
-model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash-latest",
-    generation_config=generation_config,
-    safety_settings=safety_settings
-)
+model = genai.GenerativeModel(model_name="gemini-1.5-flash-latest",
+                              generation_config=generation_config,
+                              safety_settings=safety_settings)
 
 def get_promotion_suggestions(country, region, therapeutic_group):
     prompt = (
