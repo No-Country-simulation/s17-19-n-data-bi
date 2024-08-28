@@ -6,12 +6,15 @@ from models.inference import load_model, predict
 from models.stock_logic import stock_verification
 from models.marketing_model import get_promotion_suggestions
 from models.afinidad_model import get_affinity_recommendations
-from dotenv import load_dotenv
+import json
 
-GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+with open("config.json", "r") as config_file:
+    config = json.load(config_file)
+
+GEMINI_API_KEY = config.get("GEMINI_API_KEY")
 
 if GEMINI_API_KEY is None:
-    raise Exception("API key for Gemini not found. Make sure it's set in the config.toml file.")
+    raise Exception("API key for Gemini not found. Make sure it's set in the config.json file.")
 
 genai.configure(api_key=GEMINI_API_KEY)
 
