@@ -43,18 +43,24 @@ model = genai.GenerativeModel(
     safety_settings=safety_settings
 )
 
-def get_affinity_recommendations(prompt):
+def get_affinity_recommendations(prompt, language="es"):
+    prompt_text = (
+        f"Genera una lista de posibles demandas de productos relacionados basados en el siguiente contexto, producto o "
+        f"categoría: '{prompt}'. La lista debe estar en {language} y cada recomendación debe ser específica y útil para "
+        f"el usuario final. Asegúrate de que las recomendaciones estén numeradas y sean claras y prácticas."
+    )
+
     try:
-        # Aquí se configura el prompt que se enviará a la API
-        response = model.generate_content([prompt])
-        
-        # Procesa la respuesta de la API
+        response = model.generate_content([prompt_text])
+
         if response and hasattr(response, 'text'):
-            # Dividir las líneas de texto generadas en una lista de sugerencias
             suggestions = response.text.strip().splitlines()
-            return suggestions
+
+            # Filtrar líneas vacías y devolver hasta 10 sugerencias
+            return [s for s in suggestions if s][:10]
+
         else:
-            return ["No se pudieron generar sugerencias."]
+            return ["No se pudieron generar recomendaciones."]
     
     except Exception as e:
         raise RuntimeError(f"Error al generar las recomendaciones: {e}")
