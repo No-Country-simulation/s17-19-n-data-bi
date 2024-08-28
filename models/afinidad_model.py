@@ -57,7 +57,7 @@ def get_affinity_recommendations(prompt, language="es"):
             suggestions = response.text.strip().splitlines()
 
             # Filtrar líneas vacías y devolver hasta 10 sugerencias
-            return [s for s in suggestions if s][:10]
+            return [s for s in suggestions if s][:6]
 
         else:
             return ["No se pudieron generar recomendaciones."]
