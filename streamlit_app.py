@@ -229,7 +229,7 @@ elif st.session_state['selected_button'] == 'AFINIDAD DE PRODUCTOS':
             st.warning("Por favor, ingrese un producto o categoría.")
 
 elif st.session_state['selected_button'] == 'PRODUCTOS CON COBERTURA O SIN COBERTURA':
-    st.title("Productos con Cobertura o Sin Cobertura")
+    st.title("Alcance de Cobertura según Perfil Terapéutico")
     st.subheader('Visualizaciones de Power BI')
     # Aquí puedes agregar múltiples enlaces a diferentes visualizaciones de Power BI
     st.markdown("[Visualización de Power BI PRODUCTOS CON COBERTURA](URL_DE_TU_POWER_BI_1)")
