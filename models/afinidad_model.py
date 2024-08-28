@@ -37,12 +37,6 @@ safety_settings = [
     }
 ]
 
-model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash-latest",
-    generation_config=generation_config,
-    safety_settings=safety_settings
-)
-
 def get_affinity_recommendations(prompt, language="es"):
     prompt_text = (
         f"Genera una lista de posibles demandas de productos relacionados basados en el siguiente contexto, producto o "
