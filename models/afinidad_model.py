@@ -3,12 +3,14 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-if not GEMINI_API_KEY:
-    raise Exception("API key for Gemini not found. Make sure it's set as an environment variable.")
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+
+if GEMINI_API_KEY is None:
+    raise Exception("API key for Gemini not found. Make sure it's set in the config.toml file.")
+
 genai.configure(api_key=GEMINI_API_KEY)
 
+# Configuración del modelo y generación
 generation_config = {
     "temperature": 0.4,
     "top_p": 1,
