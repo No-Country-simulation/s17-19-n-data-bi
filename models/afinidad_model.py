@@ -3,7 +3,7 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
-GEMINI_API_KEY = "your_gemini_api_key"  # Asegúrate de que esta clave esté bien configurada
+GEMINI_API_KEY = "your_gemini_api_key"
 if GEMINI_API_KEY is None:
     raise Exception("API key for Gemini not found. Make sure it's set in the config.toml file.")
 
