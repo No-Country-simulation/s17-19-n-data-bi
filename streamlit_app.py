@@ -219,8 +219,7 @@ elif st.session_state['selected_button'] == 'AFINIDAD DE PRODUCTOS':
                 
                 if suggestions:
                     st.subheader("Productos relacionados sugeridos:")
-                    for i, suggestion in enumerate(suggestions, 1):
-                        st.write(f"Producto relacionado {i}: {suggestion}")
+                    st.write("\n".join(suggestions))
                 else:
                     st.warning("No se encontraron productos relacionados.")
             except Exception as e:
