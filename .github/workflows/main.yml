@@ -42,6 +42,17 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt  # Reinstala las dependencias si es necesario
 
+    - name: Check GEMINI_API_KEY presence
+      run: echo "GEMINI_API_KEY is set"
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      if: env.GEMINI_API_KEY != ''
+
+    - name: Run script
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      run: python streamlit_app.py  # Ejecuta la aplicación Streamlit
+
     - name: Run script
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
