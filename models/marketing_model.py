@@ -3,10 +3,9 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
-GEMINI_API_KEY = "your_gemini_api_key"  # Asegúrate de que esta clave esté bien configurada
-
-if GEMINI_API_KEY is None:
-    raise Exception("API key for Gemini not found. Make sure it's set in the config.toml file.")
+GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    raise Exception("API key for Gemini not found. Make sure it's set in the secrets.toml file.")
 
 genai.configure(api_key=GEMINI_API_KEY)
 
@@ -35,6 +34,14 @@ safety_settings = [
         "threshold": "BLOCK_MEDIUM_AND_ABOVE"
     }
 ]
+
+response = genai.generate_text(
+    model="gemini-1.5-flash-latest",
+    prompt="Escribe algo interesante sobre la tecnología",
+    **generation_config
+)
+
+st.write(response)
 
 def get_promotion_suggestions(country, region, therapeutic_group):
     prompt = (
