@@ -8,9 +8,9 @@ from models.marketing_model import get_promotion_suggestions
 from models.afinidad_model import get_affinity_recommendations
 from dotenv import load_dotenv
 
-GEMINI_API_KEY = "your_gemini_api_key"
-if GEMINI_API_KEY is None:
-    raise Exception("API key for Gemini not found. Make sure it's set in the config.toml file.")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    raise Exception("API key for Gemini not found. Make sure it's set as an environment variable.")
 
 genai.configure(api_key=GEMINI_API_KEY)
 
