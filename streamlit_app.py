@@ -46,8 +46,6 @@ model = genai.GenerativeModel(
     safety_settings=safety_settings
 )
 
-st.write(response)
-
 # Cargar el modelo de stock una vez al iniciar la aplicación
 try:
     stock_model = load_model('stock')
