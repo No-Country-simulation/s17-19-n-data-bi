@@ -35,13 +35,11 @@ safety_settings = [
     }
 ]
 
-response = genai.generate_text(
-    model="gemini-1.5-flash-latest",
-    prompt="Escribe algo interesante sobre la tecnología",
-    **generation_config
+model = genai.GenerativeModel(
+    model_name="gemini-1.5-flash-latest",
+    generation_config=generation_config,
+    safety_settings=safety_settings
 )
-
-st.write(response)
 
 def get_affinity_recommendations(prompt, language="es"):
     prompt_text = (
