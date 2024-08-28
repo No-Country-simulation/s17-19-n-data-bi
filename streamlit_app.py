@@ -8,10 +8,9 @@ from models.marketing_model import get_promotion_suggestions
 from models.afinidad_model import get_affinity_recommendations
 from dotenv import load_dotenv
 
-GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-
-if GEMINI_API_KEY is None:
-    raise Exception("API key for Gemini not found. Make sure it's set in the config.toml file.")
+GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    raise Exception("API key for Gemini not found. Make sure it's set in the secrets.toml file.")
 
 genai.configure(api_key=GEMINI_API_KEY)
 
@@ -40,6 +39,14 @@ safety_settings = [
         "threshold": "BLOCK_MEDIUM_AND_ABOVE"
     }
 ]
+
+response = genai.generate_text(
+    model="gemini-1.5-flash-latest",
+    prompt="Escribe algo interesante sobre la tecnología",
+    **generation_config
+)
+
+st.write(response)
 
 # Cargar el modelo de stock una vez al iniciar la aplicación
 try:
