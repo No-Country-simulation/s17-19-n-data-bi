@@ -8,7 +8,7 @@ from models.marketing_model import get_promotion_suggestions
 from models.afinidad_model import get_affinity_recommendations
 from dotenv import load_dotenv
 
-try:
+
     GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
     print("GEMINI_API_KEY:", GEMINI_API_KEY)  # Agregar esta línea para verificar la clave
 except KeyError:
