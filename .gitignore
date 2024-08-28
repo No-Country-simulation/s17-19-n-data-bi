@@ -1,3 +1,2 @@
 .env
 .streamlit/secrets.toml
-models/.streamlit/secrets.toml
