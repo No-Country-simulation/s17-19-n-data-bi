@@ -1,12 +1,14 @@
 import google.generativeai as genai
 import streamlit as st
 
+# Configuración de la API de Gemini
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 if GEMINI_API_KEY is None:
     raise Exception("API key for Gemini not found. Make sure it's set in the secrets.toml file.")
 
 genai.configure(api_key=GEMINI_API_KEY)
 
+# Configuración del modelo
 generation_config = {
     "temperature": 0.4,
     "top_p": 1,
@@ -39,9 +41,9 @@ model = genai.GenerativeModel(
     safety_settings=safety_settings
 )
 
-def generate_gemini_response(input_prompt):
+def generate_gemini_response(prompt):
     try:
-        response = model.generate_content(input_prompt)
+        response = model.generate_content(prompt)
         return response.text
     except Exception as e:
         st.error(f"Error generating response: {e}")
