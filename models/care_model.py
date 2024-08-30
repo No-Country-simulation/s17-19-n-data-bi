@@ -49,10 +49,10 @@ def generate_gemini_response(prompt):
         st.error(f"Error generating response: {e}")
         return "Error generando la respuesta."
 
-def get_affinity_recommendations(prompt, language="es"):
+def get_care_recommendations(prompt, language="es"):
     prompt_text = (
-        f"Genera una lista de posibles demandas de productos relacionados basados en el siguiente contexto, producto o "
-        f"categoría: '{prompt}'. La lista debe estar en {language} y cada recomendación debe ser específica y útil para "
+        f"Genera una lista de posibles consejos para el cuidado de la salud, con enfoque preventivo, informativo, o de recomendación"
+        f"según la petición del usuario: '{prompt}'. Debe estar en {language} y cada enfoque debe ser específico y útil para "
         f"el usuario final. Asegúrate de que las recomendaciones estén numeradas y sean claras y prácticas."
     )
     try:
@@ -60,10 +60,10 @@ def get_affinity_recommendations(prompt, language="es"):
         if response and response != "Error generando la respuesta.":
             suggestions = response.strip().splitlines()
             # Filtrar líneas vacías y devolver hasta 10 sugerencias
-            return [s for s in suggestions if s][:10]
+            return [s for s in suggestions if s][:11]
         else:
-            return ["No se pudieron generar recomendaciones."]
+            return ["No se pudo generar su consulta."]
     
     except Exception as e:
-        st.error(f"Error al generar las recomendaciones: {e}")
-        return ["Error al generar las recomendaciones."]
+        st.error(f"Error al generar la consulta: {e}")
+        return ["Error al generar la consulta."]
