@@ -111,7 +111,7 @@ def generate_gemini_response(input_prompt):
         st.error(f"Error generating response: {e}")
         return "Error generando la respuesta."
 
-elif st.session_state['selected_button'] == 'VERIFICAR COBERTURA':
+if st.session_state['selected_button'] == 'VERIFICAR COBERTURA':
     st.title("Alcance de Cobertura según Perfil Terapéutico")
     st.subheader('Visualizaciones de Power BI')
     # Aquí puedes agregar múltiples enlaces a diferentes visualizaciones de Power BI
@@ -131,7 +131,7 @@ elif st.session_state['selected_button'] == 'CUIDÁ TU SALUD, CONSULTÁ !':
         if prompt:
             try:
                 # Llamada a la función para obtener afinidades de productos
-                suggestions = get_affinity_recommendations(prompt)
+                suggestions = get_care_recommendations(prompt)
                 
                 if suggestions:
                     st.subheader("Respuesta:")
