@@ -2,10 +2,55 @@ import streamlit as st
 import torch
 import os
 import google.generativeai as genai
+import streamlit.session_state as session
 from models.inference import load_model, predict
 from models.stock_logic import stock_verification
 from models.marketing_model import get_promotion_suggestions
 from models.afinidad_model import get_affinity_recommendations
+
+def load_users():
+    users_df = pd.read_csv('users.csv')
+    return dict(zip(users_df.username, users_df.password))
+
+# Función de autenticación
+def authenticate(username, password, users):
+    return username in users and users[username] == password
+
+# Cargar usuarios
+users = load_users()
+
+if 'authenticated' not in session:
+    session.authenticated = False
+
+if not session.authenticated:
+    st.title("Por favor, inicia sesión")
+    
+    username = st.text_input("Nombre de usuario")
+    password = st.text_input("Contraseña", type="password")
+    if st.button("Iniciar Sesión"):
+        if authenticate(username, password, users):
+            session.authenticated = True
+            session.username = username
+            st.success("¡Has iniciado sesión exitosamente!")
+            st.experimental_rerun()
+        else:
+            st.error("Nombre de usuario o contraseña incorrectos")
+else:
+    st.sidebar.title("Navegación")
+    page = st.sidebar.selectbox("Elige una página", ["Inicio", "Cerrar Sesión"])
+
+    if page == "Inicio":
+        # Aquí sigue el código original de tu aplicación
+        st.title("Tu Aplicación")
+
+        # Añade aquí el resto de la lógica de tu aplicación, como gráficos, formularios, etc.
+        # Por ejemplo:
+        st.write("Contenido de la aplicación después del inicio de sesión.")
+
+    elif page == "Cerrar Sesión":
+        session.authenticated = False
+        session.username = None
+        st.experimental_rerun()
 
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 
