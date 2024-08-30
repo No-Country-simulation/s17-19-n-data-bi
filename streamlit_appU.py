@@ -3,7 +3,7 @@ import torch
 import os
 import google.generativeai as genai
 from models.inference import load_model, predict
-from models.stock_logic import stock_verification
+from models.stock_logic_u import stock_verification
 from models.care_model import get_care_recommendations
 
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
