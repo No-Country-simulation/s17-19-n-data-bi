@@ -10,7 +10,7 @@ Orientado a Healthtech: Análisis, consulta y previsión para cadena de Farmacia
 
 🔗 **Enlaces Relevantes**
 
-- APP: [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://pharmainsights.streamlit.app)
+- APP: [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://pharma-insights.streamlit.app)
 - MVP: [![Trello](https://img.shields.io/badge/Trello-0079BF?logo=trello&logoColor=white)](https://trello.com/b/nGylF9YE/s17-19-n-data-bi)
 
 💊 **Visualizaciones y Análisis**
