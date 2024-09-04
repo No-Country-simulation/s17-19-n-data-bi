@@ -234,7 +234,7 @@ def mostrar_lógica_cliente():
     st.markdown(button_style, unsafe_allow_html=True)
 
     st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
-    st.sidebar.title("Bienvenid@! Selecciona el insight:")
+    st.sidebar.title("Bienvenid@! Seleccioná tu consulta:")
      
     if st.sidebar.button('HAY STOCK ?'):
         st.session_state['selected_button'] = 'HAY STOCK ?'
