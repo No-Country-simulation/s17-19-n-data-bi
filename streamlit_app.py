@@ -259,7 +259,7 @@ def mostrar_lógica_cliente():
                 st.warning("Por favor, ingrese su consulta.")
 
 def main():
-        st.markdown(
+    st.markdown(
         """
         <div style="display: flex; justify-content: center;">
             <img src="Pi.png" alt="Logo" width="400">
