@@ -259,10 +259,11 @@ def mostrar_lógica_cliente():
                 st.warning("Por favor, ingrese su consulta.")
 
 def main():
+    logo_path = 'Pi.png'
     st.markdown(
-        """
+        f"""
         <div style="display: flex; justify-content: center;">
-            <img src="Pi.png" alt="Logo" width="400">
+            <img src="{logo_path}" alt="Logo" width="400">
         </div>
         """,
         unsafe_allow_html=True
