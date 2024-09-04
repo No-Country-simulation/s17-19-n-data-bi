@@ -259,7 +259,7 @@ def mostrar_lógica_cliente():
                 st.warning("Por favor, ingrese su consulta.")
 
 def main():
-    st.image('Pi.png', width=500)
+    st.image('Pi.png', width=600)
     st.title("   Bienvenid@! Seleccione su perfil:")
 
     option = st.selectbox("Elija una opción", ("Seleccione", "SOY FARMACÉUTICA", "SOY CLIENTE"))
