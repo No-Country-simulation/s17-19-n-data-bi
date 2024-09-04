@@ -47,12 +47,12 @@ def mostrar_login():
     password = st.text_input("Contraseña", type="password")
 
     # Aquí puedes cargar usuarios de un archivo CSV o una base de datos
-    if st.button("Login"):
+    if st.button("INGRESAR"):
         if autenticar_usuario(username, password):
-            st.success("Login exitoso")
+            st.success("USTED INGRESÓ EXITOSAMENTE!")
             return True
         else:
-            st.error("Usuario o contraseña incorrectos")
+            st.error("Usuario o contraseña incorrectos! Reintentar nuevamente.")
             return False
 
 # Autenticación básica usando un archivo CSV
