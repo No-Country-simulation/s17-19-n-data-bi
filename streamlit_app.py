@@ -42,7 +42,7 @@ except RuntimeError as e:
 
 # Función para manejar el login
 def mostrar_login():
-    st.subheader("Login para Farmacéuticas")
+    st.subheader("Inicie Sesión")
     username = st.text_input("Usuario")
     password = st.text_input("Contraseña", type="password")
 
