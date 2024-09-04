@@ -84,9 +84,8 @@ def generate_gemini_response(input_prompt):
 
 # Lógica para farmacéuticos
 def mostrar_lógica_farmacéutica():
-    # Cargar el logo en la barra lateral
-    st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
-    st.sidebar.title("Bienvenid@! Selecciona el insight:")
+    if 'selected_button' not in st.session_state:
+        st.session_state['selected_button'] = None  
 
     # Aplicar estilo CSS a los botones
     button_style = """
@@ -103,8 +102,10 @@ def mostrar_lógica_farmacéutica():
         </style>
     """
     st.markdown(button_style, unsafe_allow_html=True)
-
-    # Crear botones en el menú lateral y manejar el estado
+    
+    st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
+    st.sidebar.title("Bienvenid@! Selecciona el insight:")
+    
     if st.sidebar.button('GESTIÓN DE STOCKS'):
         st.session_state['selected_button'] = 'GESTIÓN DE STOCKS'
 
@@ -214,9 +215,27 @@ def mostrar_lógica_farmacéutica():
 
 # Lógica para clientes
 def mostrar_lógica_cliente():
+    if 'selected_button' not in st.session_state:
+        st.session_state['selected_button'] = None    
+
+    button_style = """
+        <style>
+        .stButton > button {
+            width: 100%;
+            height: 50px;
+            background-color: #96ffae;
+            color: dark blue;
+            font-size: 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        </style>
+    """
+    st.markdown(button_style, unsafe_allow_html=True)
+
     st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
     st.sidebar.title("Bienvenid@! Selecciona el insight:")
-    
+     
     if st.sidebar.button('HAY STOCK ?'):
         st.session_state['selected_button'] = 'HAY STOCK ?'
 
