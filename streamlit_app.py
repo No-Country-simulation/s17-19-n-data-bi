@@ -58,7 +58,7 @@ def mostrar_login():
 # Autenticación básica usando un archivo CSV
 def autenticar_usuario(username, password):
     try:
-        users_df = pd.read_csv("users.csv")  # Asegúrate de tener un archivo CSV con usuarios y contraseñas
+        users_df = pd.read_csv("users.csv")
         user_row = users_df[(users_df["username"] == username) & (users_df["password"] == password)]
         return not user_row.empty
     except Exception as e:
@@ -284,8 +284,13 @@ def main():
     option = st.selectbox("Elija una opción", ("Seleccione", "SOY FARMACÉUTICA", "SOY CLIENTE"))
 
     if option == "SOY FARMACÉUTICA":
-        if mostrar_login():
-            mostrar_lógica_farmacéutica()  # Si el login es exitoso, muestra la lógica para farmacéuticos
+        # Verificamos si ya está autenticado en la sesión
+        if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
+            if mostrar_login():
+                st.session_state['logged_in'] = True  # Almacenar que el usuario inició sesión
+                mostrar_lógica_farmacéutica()
+        else:
+            mostrar_lógica_farmacéutica()  # Ya está autenticado, mostramos la lógica directamente
 
     elif option == "SOY CLIENTE":
         mostrar_lógica_cliente()  # Muestra directamente la lógica para clientes
