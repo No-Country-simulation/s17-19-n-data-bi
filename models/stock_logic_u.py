@@ -51,7 +51,7 @@ def show_stock_result(stock_data, id_sucursal, skuagr_2, model):
             prediction = predict(model, input_data)
 
         # Mostrar la predicción
-        st.write(f"Predicción de disponibilidad de stock: {'Disponible' if prediction else 'No Disponible'}")
+        st.write(f"Predicción de disponibilidad de stock en los próximos días: {'Disponible' if prediction else 'No Disponible'}")
     else:
         st.warning("No se encontraron registros para la sucursal y SKU proporcionados.")
 
