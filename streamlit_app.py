@@ -259,6 +259,7 @@ def mostrar_lógica_cliente():
                 st.warning("Por favor, ingrese su consulta.")
 
 def main():
+    st.image('streamlit_app/Pi.png', width=150)
     st.title("Seleccione su perfil")
 
     option = st.selectbox("Elija una opción", ("Seleccione", "SOY FARMACÉUTICA", "SOY CLIENTE"))
