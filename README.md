@@ -13,21 +13,50 @@ Orientado a Healthtech: Análisis, consulta y previsión para cadena de Farmacia
 - APP: [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://pharma-insights.streamlit.app)
 - MVP: [![Trello](https://img.shields.io/badge/Trello-0079BF?logo=trello&logoColor=white)](https://trello.com/b/nGylF9YE/s17-19-n-data-bi)
 
-💊 **Visualizaciones y Análisis**
+🦾 **Propuesta de Valor**
 
-Completar...
+Pharma Insights es una plataforma destinada a proporcionar análisis, predicciones, consultas y conocimiento del sector Farmacéutico refiriéndose a:
 
-💊 **Implementación de Búsqueda y Recomendación**
+- Análisis de Mercado,
+- Optimización de la Cadena de Suministro,
+- Inteligencia de Marketing y Previsión,
+- Modelado Epidemiológico.
 
-Completar...
+El enfoque está dividido según foco de interés para la cadena de Farmacias (proveedor) y para el Cliente (consumidor).
 
 📉 **Flujo del Sistema**
 
-Completar...
+La plataforma tiene dos verticales, con acceso de perfil Farmacéutico o Cliente.
 
-🦾 **Propuesta de Valor**
+El acceso para Farmacéuticas tiene un login inicial, y luego se presenta la lógica de la aplicación, pudiendo consultar acerca de:
 
-Completar...
+- Verificación de Stock:
+   - Se entrena un modelo de machine learning en PyTorch para verificar stock disponible para permitir anticipar la demanda de productos y optimizar la gestión de inventario.
+   - Se implementa con GitHub Actions, CI/CD en el contexto de machine learning (MLOps) con el objeto de automatizar el ciclo de vida del desarrollo del modelo, desde el entrenamiento hasta el despliegue y monitoreo continuo.
+   - En la predicción de stock, este modelo está diseñado para predecir problemas futuros de stock en un sistema de gestión de inventarios. Re reentrena para anticipar cuándo se debe reabastecer el stock o ajustar las estrategias de ventas. Con el pipeline, cada vez que el modelo se actualice (por ejemplo, con nuevos datos de ventas), se entrena automáticamente y se despliega en producción.
+ 
+- Predicción de Consumo:
+   - Esta tiene dos orientaciones, una basada en datos según análisis históricos y predictivos y otra con implementación de IA con enfoque preventivo.
+
+- Marketing Intelligece y Afinidad de Productos:
+   - En enfoque está basado en prompts característicos y pertinentes acerca de generar un Sistema de Recomendación de Precios y Combos, como así también de Posibles Demandas de Productos Relacionados, considerando asociatividad entre el consumo de un producto en particular con respecto al consumo de otros afines a este, con implementación de IA.
+ 
+- Productos con Cobertura o Sin Cobertura:
+   - Esta funcionalidad está enfocada a informar según perfil terapéutico el estado de cobertura de los distintos medicamentos como así también las marcas alternativas consideradas genéricas.
+
+El acceso para Clientes se presenta directamente con la lógica de la aplicación, pudiendo consultar acerca de:
+
+- Verificación de Stock:
+   - Tiene como objetivo informar al cliente si determinada Sucursal cuenta con stock disponible del medicamento que está requiriendo, como así también la predicción futura acerca de su disponibilidad.
+ 
+- Verificación de Cobertura:
+   - Esta funcionalidad está enfocada a informar según perfil terapéutico el estado de cobertura de los distintos medicamentos como así también las marcas alternativas consideradas genéricas.
+ 
+- Cuidar su Salud:
+   - Esta funcionalidad está enfocada a informar con implementación de IA, campañas de información y prevención vigentes.
+ 
+- Newsletter:
+   - Una opción con el objetivo de mantenerse al tanto de ofertas y campañas de salud mediante la solicitud de un correo electrónico.
 
 🤖 **Stack Tech**
 
