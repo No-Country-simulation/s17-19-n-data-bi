@@ -65,7 +65,7 @@ El acceso para Clientes se presenta directamente con la lógica de la aplicació
 - IDE: ![Google Colab](https://img.shields.io/badge/Google_Colab-F9AB00?logo=google-colab&logoColor=white) ![Visual Studio Code](https://img.shields.io/badge/Visual_Studio_Code-007ACC?logo=visual-studio-code&logoColor=white)
 - Visualización de datos: ![Power BI](https://img.shields.io/badge/Power_BI-F2C811?logo=power-bi&logoColor=white)
 - Creación de aplicación web interactiva: ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)
-- Gestión del Código Fuente y Desarrollo Colaborativo: ![GitHub](https://img.shields.io/badge/GitHub-100000?logo=github&logoColor=white) ![GitHub Actions](https://github.com/{OWNER}/{REPO}/actions/workflows/{WORKFLOW_FILE}/badge.svg)
+- Gestión del Código Fuente y Desarrollo Colaborativo: ![GitHub](https://img.shields.io/badge/GitHub-100000?logo=github&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/-100000?logo=github&logoColor=white)
 - MVP y Gestión de Equipo: ![Trello](https://img.shields.io/badge/Trello-0079BF?logo=trello&logoColor=white)
 
 🧩 **Colaboradores**
