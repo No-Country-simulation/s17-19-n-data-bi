@@ -6,7 +6,7 @@
 
 📊 **Rubro**
 
-Orientado a Healthtech: Análisis, consulta y previsión para cadena de Farmacias.
+Orientado a Healthtech: Análisis, consulta y previsión para Farmacéuticas y Clientes.
 
 🔗 **Enlaces Relevantes**
 
