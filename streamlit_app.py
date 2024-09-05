@@ -213,6 +213,29 @@ def mostrar_lógica_farmacéutica():
         st.markdown("[Visualización de Power BI PRODUCTOS SIN COBERTURA](URL_DE_TU_POWER_BI_2)")
         st.markdown("[Visualización de Power BI PRODUCTOS GENÉRICOS](URL_DE_TU_POWER_BI_3)")
 
+
+# Función para suscribir al cliente al newsletter
+def suscribir_a_newsletter(email):
+    # Verificar si ya existe el archivo CSV, si no, crearlo
+    archivo = "newsletter_subscribers.csv"
+    if os.path.exists(archivo):
+        # Leer el archivo existente
+        df = pd.read_csv(archivo)
+    else:
+        # Crear un nuevo DataFrame si no existe el archivo
+        df = pd.DataFrame(columns=["email"])
+
+    # Verificar si el correo ya está suscrito
+    if email in df['email'].values:
+        st.warning("Este correo ya está suscrito al newsletter.")
+    else:
+        # Añadir el correo al DataFrame y guardar en el archivo CSV
+        nuevo_suscriptor = pd.DataFrame({"email": [email]})
+        df = pd.concat([df, nuevo_suscriptor], ignore_index=True)
+        df.to_csv(archivo, index=False)
+        st.success("Te has suscrito exitosamente al newsletter de ofertas!")
+
+
 # Lógica para clientes
 def mostrar_lógica_cliente():
     if 'selected_button' not in st.session_state:
@@ -276,6 +299,18 @@ def mostrar_lógica_cliente():
                     st.error(f"Error al obtener respuesta: {e}")
             else:
                 st.warning("Por favor, ingrese su consulta.")
+
+    
+    # Lógica de suscripción al newsletter
+    elif st.session_state['selected_button'] == 'SUSCRIBIRSE AL NEWSLETTER':
+        st.title("Suscríbete a nuestro Newsletter de Ofertas y Campañas de Salud")
+        email_cliente = st.text_input("Ingrese su correo electrónico:")
+        if st.button("SUSCRIBIRSE"):
+            if email_cliente:
+                suscribir_a_newsletter(email_cliente)
+            else:
+                st.warning("Por favor, ingrese un correo electrónico válido.")
+
 
 def main():
     st.image('Pi.png', width=550)
