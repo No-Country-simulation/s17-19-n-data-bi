@@ -258,7 +258,10 @@ def mostrar_lógica_cliente():
 
     st.sidebar.image('streamlit_app/Pi.png', use_column_width=True)
     st.sidebar.title("Bienvenid@! Selecciona tu consulta:")
-     
+
+    if st.sidebar.button('SUSCRIBIRSE AL NEWSLETTER'):
+        st.session_state['selected_button'] = 'SUSCRIBIRSE AL NEWSLETTER'
+    
     if st.sidebar.button('HAY STOCK ?'):
         st.session_state['selected_button'] = 'HAY STOCK ?'
 
@@ -285,7 +288,7 @@ def mostrar_lógica_cliente():
         st.title("Campañas de Información y Prevención Vigentes")
         with st.form(key='afinidad_form'):
             prompt = st.text_input("Ingrese su consulta:")
-            submit_button = st.form_submit_button("ENVIAR CONSULTA")
+            submit_button = st.form_submit_button("Enviar Consulta")
         if submit_button:
             if prompt:
                 try:
