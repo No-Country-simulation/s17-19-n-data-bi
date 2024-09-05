@@ -307,7 +307,7 @@ def mostrar_lógica_cliente():
     # Lógica de suscripción al newsletter
     elif st.session_state['selected_button'] == 'SUSCRIBIRSE AL NEWSLETTER':
         st.title("Suscríbete a nuestro Newsletter de Ofertas y Campañas de Salud")
-        email_cliente = st.text_input("Ingrese su correo electrónico:")
+        email_cliente = st.text_input("Ingrese su correo electrónico")
         if st.button("SUSCRIBIRSE"):
             if email_cliente:
                 suscribir_a_newsletter(email_cliente)
