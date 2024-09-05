@@ -287,7 +287,7 @@ def mostrar_lógica_cliente():
     elif st.session_state['selected_button'] == 'CUIDÁ TU SALUD, CONSULTÁ !':
         st.title("Campañas de Información y Prevención Vigentes")
         with st.form(key='afinidad_form'):
-            prompt = st.text_input("Ingrese su consulta:")
+            prompt = st.text_input("Ingrese su consulta")
             submit_button = st.form_submit_button("Enviar Consulta")
         if submit_button:
             if prompt:
