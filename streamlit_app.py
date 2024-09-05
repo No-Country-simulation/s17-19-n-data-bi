@@ -169,9 +169,9 @@ def mostrar_lógica_farmacéutica():
     elif st.session_state['selected_button'] == 'MARKETING INTELLIGENCE':
         st.title('Sistema de Recomendación de Precios y Combos')
         with st.form(key='marketing_form'):
-            country = st.text_input('Ingrese el país:')
-            region = st.text_input('Ingrese la región:')
-            therapeutic_group = st.text_input('Ingrese el grupo terapéutico:')
+            country = st.text_input('Ingrese el país')
+            region = st.text_input('Ingrese la región')
+            therapeutic_group = st.text_input('Ingrese el grupo terapéutico')
             submit_button = st.form_submit_button('Obtener Sugerencias de Promociones')
         if submit_button:
             if not country or not region or not therapeutic_group:
