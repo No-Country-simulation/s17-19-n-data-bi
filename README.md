@@ -53,7 +53,7 @@ El acceso para Clientes se presenta directamente con la lógica de la aplicació
    - Esta funcionalidad está enfocada a informar según perfil terapéutico el estado de cobertura de los distintos medicamentos como así también las marcas alternativas consideradas genéricas.
  
 - Cuidar su Salud:
-   - Esta funcionalidad está enfocada a informar con implementación de IA, campañas de información y prevención vigentes.
+   - Esta funcionalidad está enfocada a informar con implementación de IA, campañas según contexto epidemiológico y de prevención vigentes.
  
 - Newsletter:
    - Una opción con el objetivo de mantenerse al tanto de ofertas y campañas de salud mediante la solicitud de un correo electrónico.
