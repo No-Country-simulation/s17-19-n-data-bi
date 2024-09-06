@@ -1,0 +1,9 @@
+jupyterlab
+google-generativeai
+boto3
+streamlit
+torch
+scikit-learn
+pandas
+numpy
+python-dotenv
