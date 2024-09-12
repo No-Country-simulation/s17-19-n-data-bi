@@ -59,8 +59,17 @@ def mostrar_login():
 # Autenticación básica usando un archivo CSV
 def autenticar_usuario(username, password):
     try:
+        # Limpiar las entradas del usuario (eliminar espacios y convertir todo a minúsculas)
+        username = username.strip().lower()
+        password = password.strip()
+
+        # Cargar los usuarios desde el archivo CSV y limpiar las columnas
         users_df = pd.read_csv("users.csv")
-        user_row = users_df[(users_df["username"] == username) & (users_df["password"] == password)]
+        users_df['username'] = users_df['username'].astype(str).str.strip().str.lower()
+        users_df['password'] = users_df['password'].astype(str).str.strip()
+
+        # Verificar si hay coincidencia
+        user_row = users_df[(users_df['username'] == username) & (users_df['password'] == password)]
         return not user_row.empty
     except Exception as e:
         st.error(f"Error al cargar el archivo de usuarios: {e}")
