@@ -142,27 +142,26 @@ def mostrar_lógica_farmacéutica():
         if prevision_basada_datos:
             st.subheader('Previsión Basada en Datos')
         
-            powerbi_urls = [
-            "https://app.powerbi.com/view?r=eyJrIjoiYmZlYjVkNWUtZTc3Yi00ZjdlLWFkNTItYzcwYWNlOWVlNGZiIiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
-        
-            ]
+        powerbi_urls = [
+        "https://app.powerbi.com/reportEmbed?reportId=e7962b5d-37b7-4353-856a-80b3c78533fe&autoAuth=true&ctid=f59c8ea4-e5d2-4273-ac75-8027ea17fb9b",
+        "https://app.powerbi.com/reportEmbed?reportId=4e7377e5-37e5-412c-abb0-88605bd186d6&autoAuth=true&ctid=f59c8ea4-e5d2-4273-ac75-8027ea17fb9b"
+        ]
 
-            titles = [
-            "Análisis Histórico de Ventas"
-        
-            ]
+        titles = [
+        "Análisis de (completar)",
+        "Análisis de (completar)"
+        ]
 
-            for title, url in zip(titles, powerbi_urls):
-                st.markdown(f"### {title}")
-                components.html(
+        for title, url in zip(titles, powerbi_urls):
+            st.markdown(f"### {title}")
+            components.html(
                 f"""
                 <iframe width="800" height="600" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
                 """,
                 height=600,
-                )
-                st.markdown("---")
+            )
+            st.markdown("---")
 
-##################
 
         if prevision_generativa:
             st.session_state['show_prevision_generativa'] = True
@@ -231,11 +230,9 @@ def mostrar_lógica_farmacéutica():
     elif st.session_state['selected_button'] == 'PRODUCTOS CON COBERTURA O SIN COBERTURA':
         st.title("Alcance de Cobertura según Perfil Terapéutico")
         st.subheader('Visualizaciones de Power BI')
-
-
-
-##############################
-
+        st.markdown("[Visualización de Power BI PRODUCTOS CON COBERTURA](URL_DE_TU_POWER_BI_1)")
+        st.markdown("[Visualización de Power BI PRODUCTOS SIN COBERTURA](URL_DE_TU_POWER_BI_2)")
+        st.markdown("[Visualización de Power BI PRODUCTOS GENÉRICOS](URL_DE_TU_POWER_BI_3)")
 
 
 # Función para suscribir al cliente al newsletter
@@ -394,3 +391,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
