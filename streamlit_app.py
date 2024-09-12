@@ -284,12 +284,12 @@ def mostrar_lógica_cliente():
         powerbi_urls = [
         "https://app.powerbi.com/reportEmbed?reportId=e7962b5d-37b7-4353-856a-80b3c78533fe&autoAuth=true&ctid=f59c8ea4-e5d2-4273-ac75-8027ea17fb9b",
         "https://app.powerbi.com/reportEmbed?reportId=4e7377e5-37e5-412c-abb0-88605bd186d6&autoAuth=true&ctid=f59c8ea4-e5d2-4273-ac75-8027ea17fb9b"
-    ]
+        ]
 
-    titles = [
+        titles = [
         "Análisis de (completar)",
         "Análisis de (completar)"
-    ]
+        ]
 
     elif st.session_state['selected_button'] == 'CUIDÁ TU SALUD, CONSULTÁ !':
         st.title("Campañas de Información y Prevención Vigentes")
