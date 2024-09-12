@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import google.generativeai as genai
+import streamlit.components.v1 as components
 from models.inference import load_model, predict
 from models.stock_logic import stock_verification
 from models.marketing_model import get_promotion_suggestions
