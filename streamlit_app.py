@@ -312,7 +312,7 @@ def mostrar_lógica_cliente():
         perfil_terapeutico = st.selectbox("Seleccione el perfil terapéutico:", perfiles_terapeuticos)
 
         # Input del cliente: Nombre del Medicamento
-        medicamento = st.text_input("Ingrese el nombre del medicamento:")
+        medicamento = st.selectbox("Seleccione el nombre del medicamento:", nombres_medicamentos)
 
         # Botón de búsqueda
         if st.button("Consultar"):
