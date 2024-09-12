@@ -306,7 +306,7 @@ def mostrar_lógica_cliente():
         df = pd.read_parquet("data/Productos.parquet")
         # Extraer los perfiles terapéuticos únicos del DataFrame
         perfiles_terapeuticos = df['perfil_terapeutico'].unique()
-
+        nombres_medicamentos = df['descriprod_agrp2'].unique()
 
         # Input del cliente: Perfil Terapéutico
         perfil_terapeutico = st.selectbox("Seleccione el perfil terapéutico:", perfiles_terapeuticos)
