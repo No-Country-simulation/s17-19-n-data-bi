@@ -300,42 +300,36 @@ def mostrar_lógica_cliente():
             st.warning("La consulta de stock no está disponible.")
 
 
-if st.session_state.get('selected_button') == 'VERIFICAR COBERTURA':
-    st.title("Alcance de Cobertura según Perfil Terapéutico")
+    elif st.session_state.get('selected_button') == 'VERIFICAR COBERTURA':
+        st.title("Alcance de Cobertura según Perfil Terapéutico")
 
-# Cargar el archivo CSV
-df = pd.read_parquet("data/Productos.parquet")
+        # Input del cliente: Perfil Terapéutico
+        perfil_terapeutico = st.text_input("Ingrese el perfil terapéutico:")
 
-# Mostrar título
-st.title("Consulta de Medicamentos según Perfil Terapéutico")
+        # Input del cliente: Nombre del Medicamento
+        medicamento = st.text_input("Ingrese el nombre del medicamento:")
 
-# Input del cliente: Perfil Terapéutico
-perfil_terapeutico = st.text_input("Ingrese el perfil terapéutico:")
-
-# Input del cliente: Nombre del Medicamento
-medicamento = st.text_input("Ingrese el nombre del medicamento:")
-
-# Botón de búsqueda
-if st.button("Consultar"):
-    # Filtrar según el perfil terapéutico y el nombre del medicamento
-    filtro = df[(df["perfil_terapeutico"] == perfil_terapeutico) & (df["descriprod_agrp2"].str.contains(medicamento, case=False, na=False))]
-    
-    # Verificar si el medicamento fue encontrado
-    if not filtro.empty:
-        # Mostrar los resultados de la consulta
-        clasificacion = filtro["cobertura_contrato"].values[0]  # PBC o No PBC
-        generico = filtro["lineaproducto"].values[0]  # Indica si es genérico
-        
-        # Resultado al cliente
-        st.write(f"**Clasificación del Medicamento**: {clasificacion}")
-        
-        if generico == "GENERICOS":
-            st.write("Este medicamento tiene una variante genérica.")
-        else:
-            st.write("Este medicamento **NO** tiene una variante genérica.")
-    else:
-        st.write("No se encontró información para el medicamento en el perfil terapéutico seleccionado.")
-
+        # Botón de búsqueda
+        if st.button("Consultar"):
+            # Filtrar según el perfil terapéutico y el nombre del medicamento
+            filtro = df[(df["perfil_terapeutico"] == perfil_terapeutico) & 
+                        (df["descriprod_agrp2"].str.contains(medicamento, case=False, na=False))]
+            
+            # Verificar si el medicamento fue encontrado
+            if not filtro.empty:
+                # Mostrar los resultados de la consulta
+                clasificacion = filtro["cobertura_contrato"].values[0]  # PBC o No PBC
+                generico = filtro["lineaproducto"].values[0]  # Indica si es genérico
+                
+                # Resultado al cliente
+                st.write(f"**Clasificación del Medicamento**: {clasificacion}")
+                
+                if generico == "GENERICOS":
+                    st.write("Este medicamento tiene una variante genérica.")
+                else:
+                    st.write("Este medicamento **NO** tiene una variante genérica.")
+            else:
+                st.write("No se encontró información para el medicamento en el perfil terapéutico seleccionado.")
 
       
     elif st.session_state['selected_button'] == 'CUIDÁ TU SALUD, CONSULTÁ !':
