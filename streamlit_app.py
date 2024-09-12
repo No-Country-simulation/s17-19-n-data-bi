@@ -300,8 +300,8 @@ def mostrar_lógica_cliente():
             st.warning("La consulta de stock no está disponible.")
 
 
-    if st.session_state.get('selected_button') == 'VERIFICAR COBERTURA':
-        st.title("Alcance de Cobertura según Perfil Terapéutico")
+if st.session_state.get('selected_button') == 'VERIFICAR COBERTURA':
+    st.title("Alcance de Cobertura según Perfil Terapéutico")
 
 # Cargar el archivo CSV
 df = pd.read_parquet("data/Productos.parquet")
@@ -337,9 +337,7 @@ if st.button("Consultar"):
         st.write("No se encontró información para el medicamento en el perfil terapéutico seleccionado.")
 
 
-
-    
-    
+      
     elif st.session_state['selected_button'] == 'CUIDÁ TU SALUD, CONSULTÁ !':
         st.title("Campañas de Información y Prevención Vigentes")
         with st.form(key='afinidad_form'):
