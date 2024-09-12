@@ -308,11 +308,14 @@ def mostrar_lógica_cliente():
         perfiles_terapeuticos = df['perfil_terapeutico'].unique()
         nombres_medicamentos = df['descriprod_agrp2'].unique()
 
-        # Input del cliente: Perfil Terapéutico
+        # Input del cliente: Perfil Terapéutico utilizando un selectbox
         perfil_terapeutico = st.selectbox("Seleccione el perfil terapéutico:", perfiles_terapeuticos)
 
-        # Input del cliente: Nombre del Medicamento
-        medicamento = st.selectbox("Seleccione el nombre del medicamento:", nombres_medicamentos)
+        # Filtrar los medicamentos según el perfil terapéutico seleccionado
+        medicamentos_filtrados = df[df["perfil_terapeutico"] == perfil_terapeutico]["descriprod_agrp2"].unique()
+
+        # Input del cliente: Nombre del Medicamento utilizando un selectbox
+        medicamento = st.selectbox("Seleccione el nombre del medicamento:", medicamentos_filtrados)
 
         # Botón de búsqueda
         if st.button("Consultar"):
