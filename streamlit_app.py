@@ -304,7 +304,7 @@ def mostrar_lógica_cliente():
         st.title("Alcance de Cobertura según Perfil Terapéutico")
 
         # Input del cliente: Perfil Terapéutico
-        perfil_terapeutico = st.text_input("Ingrese el perfil terapéutico:")
+        perfil_terapeutico = st.selectbox("Seleccione el perfil terapéutico:", perfiles_terapeuticos)
 
         # Input del cliente: Nombre del Medicamento
         medicamento = st.text_input("Ingrese el nombre del medicamento:")
