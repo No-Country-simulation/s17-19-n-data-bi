@@ -291,6 +291,17 @@ def mostrar_lógica_cliente():
         "Análisis de (completar)"
         ]
 
+        for title, url in zip(titles, powerbi_urls):
+            st.markdown(f"### {title}")
+            components.html(
+                f"""
+                <iframe width="800" height="600" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
+                """,
+                height=600,
+            )
+            st.markdown("---")
+
+    
     elif st.session_state['selected_button'] == 'CUIDÁ TU SALUD, CONSULTÁ !':
         st.title("Campañas de Información y Prevención Vigentes")
         with st.form(key='afinidad_form'):
