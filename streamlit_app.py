@@ -141,7 +141,27 @@ def mostrar_lógica_farmacéutica():
 
         if prevision_basada_datos:
             st.subheader('Previsión Basada en Datos')
-            st.markdown("[Visualización de Power BI](URL_DE_TU_POWER_BI)")
+        
+        powerbi_urls = [
+        "https://app.powerbi.com/reportEmbed?reportId=e7962b5d-37b7-4353-856a-80b3c78533fe&autoAuth=true&ctid=f59c8ea4-e5d2-4273-ac75-8027ea17fb9b",
+        "https://app.powerbi.com/reportEmbed?reportId=4e7377e5-37e5-412c-abb0-88605bd186d6&autoAuth=true&ctid=f59c8ea4-e5d2-4273-ac75-8027ea17fb9b"
+        ]
+
+        titles = [
+        "Análisis de (completar)",
+        "Análisis de (completar)"
+        ]
+
+        for title, url in zip(titles, powerbi_urls):
+            st.markdown(f"### {title}")
+            components.html(
+                f"""
+                <iframe width="800" height="600" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
+                """,
+                height=600,
+            )
+            st.markdown("---")
+
 
         if prevision_generativa:
             st.session_state['show_prevision_generativa'] = True
@@ -279,29 +299,44 @@ def mostrar_lógica_cliente():
         else:
             st.warning("La consulta de stock no está disponible.")
 
-    elif st.session_state['selected_button'] == 'VERIFICAR COBERTURA':
-        st.title("Alcance de Cobertura según Perfil Terapéutico")
+# Cargar el archivo CSV
+df = pd.read_parquet("data/Productos.parquet")
 
-        powerbi_urls = [
-        "https://app.powerbi.com/reportEmbed?reportId=e7962b5d-37b7-4353-856a-80b3c78533fe&autoAuth=true&ctid=f59c8ea4-e5d2-4273-ac75-8027ea17fb9b",
-        "https://app.powerbi.com/reportEmbed?reportId=4e7377e5-37e5-412c-abb0-88605bd186d6&autoAuth=true&ctid=f59c8ea4-e5d2-4273-ac75-8027ea17fb9b"
-        ]
+# Verifica si el botón seleccionado es 'VERIFICAR COBERTURA'
+if st.session_state.get('selected_button') == 'VERIFICAR COBERTURA':
+    st.title("Alcance de Cobertura según Perfil Terapéutico")
 
-        titles = [
-        "Análisis de (completar)",
-        "Análisis de (completar)"
-        ]
+    # Input del cliente: Perfil Terapéutico
+    perfil_terapeutico = st.text_input("Ingrese el perfil terapéutico:")
 
-        for title, url in zip(titles, powerbi_urls):
-            st.markdown(f"### {title}")
-            components.html(
-                f"""
-                <iframe width="800" height="600" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
-                """,
-                height=600,
-            )
-            st.markdown("---")
+    # Input del cliente: Nombre del Medicamento
+    medicamento = st.text_input("Ingrese el nombre del medicamento:")
 
+    # Botón de búsqueda
+    if st.button("Consultar"):
+        # Filtrar según el perfil terapéutico y el nombre del medicamento
+        filtro = df[(df["perfil_terapeutico"] == perfil_terapeutico) & 
+                    (df["descriprod_agrp2"].str.contains(medicamento, case=False, na=False))]
+
+        # Verificar si el medicamento fue encontrado
+        if not filtro.empty:
+            # Mostrar los resultados de la consulta
+            clasificacion = filtro["cobertura_contrato"].values[0]  # PBC o No PBC
+            generico = filtro["lineaproducto"].values[0]  # Indica si es genérico
+
+            # Resultado al cliente
+            st.write(f"**Clasificación del Medicamento**: {clasificacion}")
+
+            if generico == "GENERICOS":
+                st.write("Este medicamento tiene una variante genérica.")
+            else:
+                st.write("Este medicamento **NO** tiene una variante genérica.")
+        else:
+            st.write("No se encontró información para el medicamento en el perfil terapéutico seleccionado.")
+
+
+
+    
     
     elif st.session_state['selected_button'] == 'CUIDÁ TU SALUD, CONSULTÁ !':
         st.title("Campañas de Información y Prevención Vigentes")
