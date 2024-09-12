@@ -330,14 +330,14 @@ def mostrar_lógica_cliente():
                 generico = filtro["lineaproducto"].values[0]  # Indica si es genérico
                 
                 # Resultado al cliente
-                st.write(f"**Clasificación del Medicamento**: {clasificacion}")
+                st.write(f"**Clasificación PCB (con cobertura) o NO PCB (sin cobertura). Resultado**: {clasificacion}")
                 
                 if generico == "GENERICOS":
                     st.write("Este medicamento tiene una variante genérica.")
                 else:
                     st.write("Este medicamento **NO** tiene una variante genérica.")
             else:
-                st.write("No se encontró información para el medicamento en el perfil terapéutico seleccionado.")
+                st.write("No hay información disponible. Acérquese a la Sucursal más cercana para hacer su consulta.")
 
       
     elif st.session_state['selected_button'] == 'CUIDÁ TU SALUD, CONSULTÁ !':
