@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import google.generativeai as genai
+import streamlit.components.v1 as components
 from models.inference import load_model, predict
 from models.stock_logic import stock_verification
 from models.marketing_model import get_promotion_suggestions
@@ -58,8 +59,17 @@ def mostrar_login():
 # Autenticación básica usando un archivo CSV
 def autenticar_usuario(username, password):
     try:
+        # Limpiar las entradas del usuario (eliminar espacios y convertir todo a minúsculas)
+        username = username.strip().lower()
+        password = password.strip()
+
+        # Cargar los usuarios desde el archivo CSV y limpiar las columnas
         users_df = pd.read_csv("users.csv")
-        user_row = users_df[(users_df["username"] == username) & (users_df["password"] == password)]
+        users_df['username'] = users_df['username'].astype(str).str.strip().str.lower()
+        users_df['password'] = users_df['password'].astype(str).str.strip()
+
+        # Verificar si hay coincidencia
+        user_row = users_df[(users_df['username'] == username) & (users_df['password'] == password)]
         return not user_row.empty
     except Exception as e:
         st.error(f"Error al cargar el archivo de usuarios: {e}")
@@ -140,7 +150,25 @@ def mostrar_lógica_farmacéutica():
 
         if prevision_basada_datos:
             st.subheader('Previsión Basada en Datos')
-            st.markdown("[Visualización de Power BI](URL_DE_TU_POWER_BI)")
+        
+            powerbi_urls = [
+            "https://app.powerbi.com/view?r=eyJrIjoiY2I3NmQ1MTgtYzRiNC00MDlmLTg5NzgtY2ZjMTBmM2I0NjM0IiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
+            ]
+
+            titles = [
+            "Análisis y Reportes"       
+            ]
+
+            for title, url in zip(titles, powerbi_urls):
+                st.markdown(f"### {title}")
+                components.html(
+                    f"""
+                    <iframe width="800" height="600" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
+                    """,
+                    height=600,
+                )
+                st.markdown("---")
+
 
         if prevision_generativa:
             st.session_state['show_prevision_generativa'] = True
@@ -278,12 +306,47 @@ def mostrar_lógica_cliente():
         else:
             st.warning("La consulta de stock no está disponible.")
 
-    elif st.session_state['selected_button'] == 'VERIFICAR COBERTURA':
-        st.title("Alcance de Cobertura según Perfil Terapéutico")
-        st.subheader('Visualizaciones de Power BI')
-        st.markdown("[Visualización de Power BI PRODUCTOS CON COBERTURA](URL_DE_TU_POWER_BI_1)")
-        st.markdown("[Visualización de Power BI PRODUCTOS SIN COBERTURA](URL_DE_TU_POWER_BI_2)")
 
+    elif st.session_state.get('selected_button') == 'VERIFICAR COBERTURA':
+        st.title("Alcance de Cobertura según Perfil Terapéutico")
+
+        df = pd.read_parquet("data/Productos.parquet")
+        # Extraer los perfiles terapéuticos únicos del DataFrame
+        perfiles_terapeuticos = df['perfil_terapeutico'].unique()
+        nombres_medicamentos = df['descriprod_agrp2'].unique()
+
+        # Input del cliente: Perfil Terapéutico utilizando un selectbox
+        perfil_terapeutico = st.selectbox("Seleccione el perfil terapéutico:", perfiles_terapeuticos)
+
+        # Filtrar los medicamentos según el perfil terapéutico seleccionado
+        medicamentos_filtrados = df[df["perfil_terapeutico"] == perfil_terapeutico]["descriprod_agrp2"].unique()
+
+        # Input del cliente: Nombre del Medicamento utilizando un selectbox
+        medicamento = st.selectbox("Seleccione el nombre del medicamento:", medicamentos_filtrados)
+
+        # Botón de búsqueda
+        if st.button("Consultar"):
+            # Filtrar según el perfil terapéutico y el nombre del medicamento
+            filtro = df[(df["perfil_terapeutico"] == perfil_terapeutico) & 
+                        (df["descriprod_agrp2"].str.contains(medicamento, case=False, na=False))]
+            
+            # Verificar si el medicamento fue encontrado
+            if not filtro.empty:
+                # Mostrar los resultados de la consulta
+                clasificacion = filtro["cobertura_contrato"].values[0]  # PBC o No PBC
+                generico = filtro["lineaproducto"].values[0]  # Indica si es genérico
+                
+                # Resultado al cliente
+                st.write(f"**Clasificación PCB (con cobertura) o NO PCB (sin cobertura). Resultado**: {clasificacion}")
+                
+                if generico == "GENERICOS":
+                    st.write("Este medicamento tiene una variante genérica.")
+                else:
+                    st.write("Este medicamento **NO** tiene una variante genérica.")
+            else:
+                st.write("No hay información disponible. Acérquese a la Sucursal más cercana para hacer su consulta.")
+
+      
     elif st.session_state['selected_button'] == 'CUIDÁ TU SALUD, CONSULTÁ !':
         st.title("Campañas de Información y Prevención Vigentes")
         with st.form(key='afinidad_form'):
@@ -335,3 +398,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
