@@ -130,8 +130,8 @@ def mostrar_lógica_farmacéutica():
     if st.sidebar.button('AFINIDAD DE PRODUCTOS'):
         st.session_state['selected_button'] = 'AFINIDAD DE PRODUCTOS'
 
-    if st.sidebar.button('PRODUCTOS CON COBERTURA O SIN COBERTURA'):
-        st.session_state['selected_button'] = 'PRODUCTOS CON COBERTURA O SIN COBERTURA'
+    if st.sidebar.button('ANÁLISIS DE PRODUCTO, RIESGO Y COBERTURA'):
+        st.session_state['selected_button'] = 'ANÁLISIS DE PRODUCTO, RIESGO Y COBERTURA'
 
     if st.session_state['selected_button'] == 'GESTIÓN DE STOCKS':
         st.title("Verificación de Stock Disponible en Sucursales")
@@ -234,8 +234,8 @@ def mostrar_lógica_farmacéutica():
             else:
                 st.warning("Por favor, ingrese un producto o categoría.")
 
-    elif st.session_state['selected_button'] == 'PRODUCTOS CON COBERTURA O SIN COBERTURA':
-        st.title("Alcance de Cobertura según Perfil Terapéutico")
+    elif st.session_state['selected_button'] == 'ANÁLISIS DE PRODUCTO, RIESGO Y COBERTURA':
+        st.title("Distribuciones y Análisis")
         st.subheader('Visualizaciones de Power BI')
 
         powerbi_urls = [
