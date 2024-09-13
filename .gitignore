@@ -2,5 +2,6 @@
 .streamlit/secrets.toml
 .streamlit/config.toml
 users.csv
+newsletter_subscribers.csv
 data_analysis_bi/_pycache
 data_analysis_bi/notebooks/resources.cpython-311.pyc
