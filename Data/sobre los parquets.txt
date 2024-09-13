@@ -1,0 +1,1 @@
+# Los parquets cargados en esta carpeta son para el análisis y las previsiones.
