@@ -1,5 +1,5 @@
+.gitignore
 .streamlit/secrets.toml
 .streamlit/config.toml
-*.csv
-.gitignore
-Notebooks/resources.py
+users.csv
+data_analysis_bi/_pycache
