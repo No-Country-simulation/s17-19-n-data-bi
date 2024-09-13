@@ -250,7 +250,7 @@ def mostrar_lógica_farmacéutica():
             st.markdown(f"### {title}")
             components.html(
                 f"""
-                <iframe width="800" height="600" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
+                <iframe width="1000" height="700" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
                 """,
                 height=600,
             )
