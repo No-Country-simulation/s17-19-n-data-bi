@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import os
 import google.generativeai as genai
 import streamlit.components.v1 as components
 from models.inference import load_model, predict
