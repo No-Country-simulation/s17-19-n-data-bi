@@ -152,7 +152,7 @@ def mostrar_lógica_farmacéutica():
             st.subheader('Previsión Basada en Datos')
         
             powerbi_urls = [
-            "https://app.powerbi.com/view?r=eyJrIjoiY2I3NmQ1MTgtYzRiNC00MDlmLTg5NzgtY2ZjMTBmM2I0NjM0IiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
+            "https://app.powerbi.com/view?r=eyJrIjoiMWM5MTYzNTgtZjcxZC00ZTJhLTg4YjctOTZjYmVmYWM3MTIzIiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
             ]
 
             titles = [
