@@ -233,11 +233,12 @@ def mostrar_lógica_farmacéutica():
                     st.error(f"Error al obtener productos relacionados: {e}")
             else:
                 st.warning("Por favor, ingrese un producto o categoría.")
-
+    
+    st.set_page_config(layout="wide")
     elif st.session_state['selected_button'] == 'ANÁLISIS INTEGRAL':
         st.title("Distribuciones y Análisis")
 
-        st.set_page_config(layout="wide")
+
         
         def mostrar_dashboard(title, url, width=1000, height=700):
             """
