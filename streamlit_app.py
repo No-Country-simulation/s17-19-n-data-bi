@@ -242,10 +242,6 @@ def mostrar_lógica_farmacéutica():
         "https://app.powerbi.com/view?r=eyJrIjoiMzM3M2U1MWUtYTM3OS00YjY5LTljMzYtZjNhMjUzNWQ3Mzk5IiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
         ]
 
-        titles = [
-        "Análisis y Reportes"       
-        ]
-
         for title, url in zip(titles, powerbi_urls):
             st.markdown(f"### {title}")
             components.html(
