@@ -236,7 +236,6 @@ def mostrar_lógica_farmacéutica():
     
     
     elif st.session_state['selected_button'] == 'ANÁLISIS INTEGRAL':
-        st.set_page_config(layout="wide")
         st.title("Distribuciones y Análisis")
         
         def mostrar_dashboard(title, url, width=1000, height=700):
