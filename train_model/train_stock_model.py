@@ -29,8 +29,6 @@ stock_inicial = pd.merge(sucursales[['id_sucursal']], productos[['skuagr_2']], h
 # Asignar un stock inicial aleatorio (mayor de 250) a cada combinación de sucursal y producto
 # Usamos randint para generar valores aleatorios entre 250 y 500 (puedes ajustar el rango)
 stock_inicial['stock_inicial'] = np.random.randint(251, 500, size=len(stock_inicial))
-# Mostrar una vista previa del stock inicial
-stock_inicial.head()
 
 # Sumar las transacciones para cada combinación de sucursal y producto
 transacciones_agrupadas = data.groupby(['id_sucursal', 'skuagr_2']).agg({'cantidad_dispensada': 'sum'}).reset_index()
