@@ -290,6 +290,34 @@ def suscribir_a_newsletter(email):
         st.success("Te has suscrito exitosamente al newsletter de ofertas!")
 
 
+# Función para suscribir al cliente al newsletter
+def suscribir_a_newsletter(email):
+    # Especificar la ruta del archivo
+    archivo = "newsletter_subscribers.csv"
+
+    try:
+        # Verificar si ya existe el archivo CSV, si no, crearlo
+        if os.path.exists(archivo):
+            # Leer el archivo existente
+            df = pd.read_csv(archivo)
+        else:
+            # Crear un nuevo DataFrame si no existe el archivo
+            df = pd.DataFrame(columns=["email"])
+
+        # Verificar si el correo ya está suscrito
+        if email in df['email'].values:
+            st.warning("Este correo ya está suscrito al newsletter.")
+        else:
+            # Añadir el correo al DataFrame y guardar en el archivo CSV
+            nuevo_suscriptor = pd.DataFrame({"email": [email]})
+            df = pd.concat([df, nuevo_suscriptor], ignore_index=True)
+            df.to_csv(archivo, index=False)
+            st.success("Te has suscrito exitosamente al newsletter de ofertas!")
+
+    except Exception as e:
+        st.error(f"Error al procesar la suscripción: {str(e)}")
+
+
 # Lógica para clientes
 def mostrar_lógica_cliente():
     if 'selected_button' not in st.session_state:
@@ -394,7 +422,7 @@ def mostrar_lógica_cliente():
 
     
     # Lógica de suscripción al newsletter
-    elif st.session_state['selected_button'] == 'SUSCRIBIRSE AL NEWSLETTER':
+    if st.session_state.get('selected_button') == 'SUSCRIBIRSE AL NEWSLETTER':
         st.title("Suscríbete a nuestro Newsletter de Ofertas y Campañas de Salud")
         email_cliente = st.text_input("Ingrese su correo electrónico")
         if st.button("SUSCRIBIRSE"):
