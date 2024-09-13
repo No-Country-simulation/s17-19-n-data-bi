@@ -238,7 +238,7 @@ def mostrar_lógica_farmacéutica():
     elif st.session_state['selected_button'] == 'ANÁLISIS INTEGRAL':
         st.title("Distribuciones y Análisis")
         
-        def mostrar_dashboard(title, url, width=1000, height=700):
+        def mostrar_dashboard(title, url, width=900, height=700):
             """
             Función para mostrar un dashboard de Power BI embebido en Streamlit.
             
@@ -257,7 +257,7 @@ def mostrar_lógica_farmacéutica():
             st.markdown("---")  # Separador
         
         # Listas de títulos y URLs
-        titles = ["Dashboard 1", "Dashboard 2"]
+        titles = ["Análisis de Productos, Riesgo y Cobertura", "Análisis por Sucursales, de Consumo de Producto y Tendencias"]
         powerbi_urls = [
             "https://app.powerbi.com/view?r=eyJrIjoiMzM3M2U1MWUtYTM3OS00YjY5LTljMzYtZjNhMjUzNWQ3Mzk5IiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9", 
             "https://app.powerbi.com/view?r=eyJrIjoiOWJiNDYyOGMtNzE2OS00NjhkLTgxMTUtMjc0NmY4M2RhYzRkIiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
@@ -265,7 +265,7 @@ def mostrar_lógica_farmacéutica():
         
         # Mostrar los dashboards con mayor altura para que ambos se rendericen correctamente
         for title, url in zip(titles, powerbi_urls):
-            mostrar_dashboard(title, url, width=1000, height=700)
+            mostrar_dashboard(title, url, width=900, height=700)
         
 
 # Función para suscribir al cliente al newsletter
