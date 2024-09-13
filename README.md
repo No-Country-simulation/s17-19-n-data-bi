@@ -41,8 +41,8 @@ El acceso para Farmacéuticas tiene un login inicial, y luego se presenta la ló
 - Marketing Intelligece y Afinidad de Productos:
    - En enfoque está basado en prompts característicos y pertinentes acerca de generar un Sistema de Recomendación de Precios y Combos, como así también de Posibles Demandas de Productos Relacionados, considerando asociatividad entre el consumo de un producto en particular con respecto al consumo de otros afines a este, con implementación de IA.
  
-- Productos con Cobertura o Sin Cobertura:
-   - Esta funcionalidad está enfocada a informar según perfil terapéutico el estado de cobertura de los distintos medicamentos como así también las marcas alternativas consideradas genéricas.
+- Análisis Integral:
+   - Esta funcionalidad está enfocada a informar análisis sobre distribución de productos, riesgo, cobertura, como asi también de sucursales, consumo de productos y de tendencias.
 
 El acceso para Clientes se presenta directamente con la lógica de la aplicación, pudiendo consultar acerca de:
 
