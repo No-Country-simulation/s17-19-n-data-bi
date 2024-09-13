@@ -237,10 +237,26 @@ def mostrar_lógica_farmacéutica():
     elif st.session_state['selected_button'] == 'PRODUCTOS CON COBERTURA O SIN COBERTURA':
         st.title("Alcance de Cobertura según Perfil Terapéutico")
         st.subheader('Visualizaciones de Power BI')
-        st.markdown("[Visualización de Power BI PRODUCTOS CON COBERTURA](URL_DE_TU_POWER_BI_1)")
-        st.markdown("[Visualización de Power BI PRODUCTOS SIN COBERTURA](URL_DE_TU_POWER_BI_2)")
-        st.markdown("[Visualización de Power BI PRODUCTOS GENÉRICOS](URL_DE_TU_POWER_BI_3)")
 
+        powerbi_urls = [
+        "https://app.powerbi.com/view?r=eyJrIjoiMzM3M2U1MWUtYTM3OS00YjY5LTljMzYtZjNhMjUzNWQ3Mzk5IiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
+        ]
+
+        titles = [
+        "Análisis y Reportes"       
+        ]
+
+        st.set_page_config(layout="wide")
+        for title, url in zip(titles, powerbi_urls):
+            st.markdown(f"### {title}")
+            components.html(
+                f"""
+                <iframe width="800" height="600" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
+                """,
+                height=600,
+            )
+            st.markdown("---")
+        
 
 # Función para suscribir al cliente al newsletter
 def suscribir_a_newsletter(email):
@@ -333,11 +349,11 @@ def mostrar_lógica_cliente():
             # Verificar si el medicamento fue encontrado
             if not filtro.empty:
                 # Mostrar los resultados de la consulta
-                clasificacion = filtro["cobertura_contrato"].values[0]  # PBC o No PBC
+                clasificacion = filtro["cobertura_contrato"].values[0]
                 generico = filtro["lineaproducto"].values[0]  # Indica si es genérico
                 
                 # Resultado al cliente
-                st.write(f"**Clasificación PCB (con cobertura) o NO PCB (sin cobertura). Resultado**: {clasificacion}")
+                st.write(f"**Clasificación PBS (con cobertura) o NO PBS (sin cobertura). Resultado**: {clasificacion}")
                 
                 if generico == "GENERICOS":
                     st.write("Este medicamento tiene una variante genérica.")
