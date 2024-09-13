@@ -151,23 +151,23 @@ def mostrar_lógica_farmacéutica():
         if prevision_basada_datos:
             st.subheader('Previsión Basada en Datos')
         
-        powerbi_urls = [
-        "https://app.powerbi.com/view?r=eyJrIjoiY2I3NmQ1MTgtYzRiNC00MDlmLTg5NzgtY2ZjMTBmM2I0NjM0IiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
-        ]
+            powerbi_urls = [
+            "https://app.powerbi.com/view?r=eyJrIjoiY2I3NmQ1MTgtYzRiNC00MDlmLTg5NzgtY2ZjMTBmM2I0NjM0IiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
+            ]
 
-        titles = [
-        "Análisis Histórico de Ventas"       
-        ]
+            titles = [
+            "Análisis Histórico de Ventas"       
+            ]
 
-        for title, url in zip(titles, powerbi_urls):
-            st.markdown(f"### {title}")
-            components.html(
-                f"""
-                <iframe width="800" height="600" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
-                """,
-                height=600,
-            )
-            st.markdown("---")
+            for title, url in zip(titles, powerbi_urls):
+                st.markdown(f"### {title}")
+                components.html(
+                    f"""
+                    <iframe width="800" height="600" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
+                    """,
+                    height=600,
+                )
+                st.markdown("---")
 
 
         if prevision_generativa:
