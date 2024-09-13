@@ -246,7 +246,6 @@ def mostrar_lógica_farmacéutica():
         "Análisis y Reportes"       
         ]
 
-        st.set_page_config(layout="wide")
         for title, url in zip(titles, powerbi_urls):
             st.markdown(f"### {title}")
             components.html(
