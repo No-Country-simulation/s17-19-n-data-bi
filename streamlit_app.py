@@ -156,7 +156,7 @@ def mostrar_lógica_farmacéutica():
             ]
 
             titles = [
-            "Análisis Histórico de Ventas"       
+            "Análisis y Reportes"       
             ]
 
             for title, url in zip(titles, powerbi_urls):
