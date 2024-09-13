@@ -8,12 +8,13 @@ Original file is located at
 """
 
 import pandas as pd
+import os
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-import os
 
 # Cargar los datasets
 sucursales = pd.read_parquet('data/Sucursales.parquet')
@@ -25,7 +26,11 @@ usuarios = pd.read_parquet('data/Usuarios.parquet')
 
 # Crear la tabla de stock inicial y calcular el stock disponible
 stock_inicial = pd.merge(sucursales[['id_sucursal']], productos[['skuagr_2']], how='cross')
-stock_inicial['stock_inicial'] = 300  # Asignar 100 unidades como stock inicial
+# Asignar un stock inicial aleatorio (mayor de 250) a cada combinación de sucursal y producto
+# Usamos randint para generar valores aleatorios entre 250 y 500 (puedes ajustar el rango)
+stock_inicial['stock_inicial'] = np.random.randint(251, 500, size=len(stock_inicial))
+# Mostrar una vista previa del stock inicial
+stock_inicial.head()
 
 # Sumar las transacciones para cada combinación de sucursal y producto
 transacciones_agrupadas = data.groupby(['id_sucursal', 'skuagr_2']).agg({'cantidad_dispensada': 'sum'}).reset_index()
