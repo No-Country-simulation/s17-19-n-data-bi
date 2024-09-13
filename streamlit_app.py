@@ -130,8 +130,8 @@ def mostrar_lógica_farmacéutica():
     if st.sidebar.button('AFINIDAD DE PRODUCTOS'):
         st.session_state['selected_button'] = 'AFINIDAD DE PRODUCTOS'
 
-    if st.sidebar.button('ANÁLISIS DE PRODUCTO, RIESGO Y COBERTURA'):
-        st.session_state['selected_button'] = 'ANÁLISIS DE PRODUCTO, RIESGO Y COBERTURA'
+    if st.sidebar.button('ANÁLISIS INTEGRAL'):
+        st.session_state['selected_button'] = 'ANÁLISIS INTEGRAL'
 
     if st.session_state['selected_button'] == 'GESTIÓN DE STOCKS':
         st.title("Verificación de Stock Disponible en Sucursales")
@@ -152,9 +152,7 @@ def mostrar_lógica_farmacéutica():
             st.subheader('Previsión Basada en Datos')
         
             powerbi_urls = [
-            "https://app.powerbi.com/view?r=eyJrIjoiMWM5MTYzNTgtZjcxZC00ZTJhLTg4YjctOTZjYmVmYWM3MTIzIiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9", 
-            
-            "https://app.powerbi.com/view?r=eyJrIjoiOWJiNDYyOGMtNzE2OS00NjhkLTgxMTUtMjc0NmY4M2RhYzRkIiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
+            "https://app.powerbi.com/view?r=eyJrIjoiMWM5MTYzNTgtZjcxZC00ZTJhLTg4YjctOTZjYmVmYWM3MTIzIiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
             ]
 
             titles = [
@@ -236,11 +234,12 @@ def mostrar_lógica_farmacéutica():
             else:
                 st.warning("Por favor, ingrese un producto o categoría.")
 
-    elif st.session_state['selected_button'] == 'ANÁLISIS DE PRODUCTO, RIESGO Y COBERTURA':
+    elif st.session_state['selected_button'] == 'ANÁLISIS INTEGRAL':
         st.title("Distribuciones y Análisis")
 
         powerbi_urls = [
-        "https://app.powerbi.com/view?r=eyJrIjoiMzM3M2U1MWUtYTM3OS00YjY5LTljMzYtZjNhMjUzNWQ3Mzk5IiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
+        "https://app.powerbi.com/view?r=eyJrIjoiMzM3M2U1MWUtYTM3OS00YjY5LTljMzYtZjNhMjUzNWQ3Mzk5IiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9", 
+        "https://app.powerbi.com/view?r=eyJrIjoiOWJiNDYyOGMtNzE2OS00NjhkLTgxMTUtMjc0NmY4M2RhYzRkIiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
         ]
 
         titles = [
