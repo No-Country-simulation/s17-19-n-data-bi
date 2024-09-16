@@ -50,26 +50,11 @@ def load_model(model_name):
     else:
         raise FileNotFoundError(f"No se encontró el archivo de modelo: {model_path}")
 
-def predict(model, input_data):
+def predict(model, input_tensor):
     try:
-        # Verificar si input_data está vacío
-        if input_data.empty:
-            raise ValueError("El input_data está vacío. No se puede hacer la predicción.")
-
         # Mostrar los datos originales para depuración
-        print("Datos originales en input_data:")
-        print(input_data)
-
-        # Codificar columnas categóricas
-        label_encoders = {}
-        for column in input_data.columns:
-            if input_data[column].dtype == 'object':
-                le = LabelEncoder()
-                input_data[column] = le.fit_transform(input_data[column])
-                label_encoders[column] = le
-
-        # Convertir los datos de entrada en un tensor
-        input_tensor = torch.tensor(input_data.values, dtype=torch.float32)
+        print("Tensor de entrada:")
+        print(input_tensor)
 
         # Verificar el tamaño del tensor
         print(f"Tamaño del tensor de entrada: {input_tensor.shape}")
