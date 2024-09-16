@@ -1,4 +1,3 @@
-
 import pandas as pd
 import streamlit as st
 import torch
@@ -6,27 +5,37 @@ from models.inference import load_model, predict
 from models.stock_data import load_stock_data
 
 def preprocess_input_data(stock_data, id_sucursal, skuagr_2):
-    # Generar datos de ejemplo basados en la estructura esperada
-    stock_inicial = pd.DataFrame({"id_sucursal": [id_sucursal], "skuagr_2": [skuagr_2]})
-    stock_inicial["stock_inicial"] = 300
-    stock_inicial["cantidad_dispensada"] = 0
-    stock_inicial["stock_disponible"] = stock_inicial["stock_inicial"] - stock_inicial["cantidad_dispensada"]
+    # Convertir los valores de entrada a los tipos correctos
+    id_sucursal = int(id_sucursal.strip())  # Aseguramos que sea un entero y sin espacios
+    skuagr_2 = skuagr_2.strip()  # Eliminamos posibles espacios en blanco
+
+    # Filtrar los datos correctamente utilizando el DataFrame cargado
+    filtered_data = stock_data[
+        (stock_data['id_sucursal'] == id_sucursal) & 
+        (stock_data['skuagr_2'] == skuagr_2)
+    ]
     
-    # Crear variables dummy para coincidir con el preprocesamiento del entrenamiento
-    input_data = stock_inicial.drop(columns=["stock_inicial", "cantidad_dispensada", "stock_disponible"])
+    # Verificar si existen los datos filtrados
+    if filtered_data.empty:
+        raise ValueError(f"No se encontraron datos para id_sucursal {id_sucursal} y skuagr_2 {skuagr_2}")
+    
+    # Usar las columnas calculadas en 'stock_data.py' como 'stock_disponible' y 'hay_stock'
+    input_data = filtered_data[['stock_disponible', 'hay_stock']]
+
+    # Crear variables dummy para coincidir con el preprocesamiento del modelo
     input_data = pd.get_dummies(input_data, drop_first=True)
     
-    # Asegurar que el número de columnas coincida con lo esperado por el modelo
+    # Asegurarse de que el número de columnas coincida con lo esperado por el modelo
     if input_data.shape[1] < 1995:  # Asumimos que el modelo espera 1995 características
         missing_cols = 1995 - input_data.shape[1]
         # Añadir columnas adicionales llenas de ceros para completar
         for i in range(missing_cols):
             input_data[f'dummy_{i}'] = 0
-    
+
     return input_data
 
 def show_stock_result(stock_data, id_sucursal, skuagr_2, model):
-    # Filtrar los datos correctamente utilizando el DataFrame cargado
+    # Filtrar los datos correctamente
     filtered_data = stock_data[
         (stock_data['id_sucursal'] == id_sucursal) & 
         (stock_data['skuagr_2'] == skuagr_2)
@@ -34,10 +43,7 @@ def show_stock_result(stock_data, id_sucursal, skuagr_2, model):
 
     # Mostrar el resultado o un mensaje si no se encuentra nada
     if not filtered_data.empty:
-        if not filtered_data.empty:
-            st.write("Producto disponible.")
-        else:
-            st.write("Producto no disponible.")
+        st.write("Producto disponible.") if filtered_data['hay_stock'].iloc[0] == 1 else st.write("Producto no disponible.")
         
         # Preprocesar los datos para la inferencia
         input_data = preprocess_input_data(stock_data, id_sucursal, skuagr_2)
@@ -47,11 +53,12 @@ def show_stock_result(stock_data, id_sucursal, skuagr_2, model):
             raise ValueError(f"El número de características de input_data ({input_data.shape[1]}) no coincide con lo esperado ({expected_columns}).")
         
         # Convertir a tensores y hacer la predicción
+        input_tensor = torch.tensor(input_data.values).float()
         with torch.no_grad():
-            prediction = predict(model, input_data)
+            prediction = predict(model, input_tensor)
 
-        # Mostrar la predicción
-        st.write(f"Predicción de disponibilidad de stock en los próximos días: {'Disponible' if prediction else 'No Disponible'}")
+        # Mostrar la predicción de disponibilidad futura
+        st.write(f"Predicción de disponibilidad futura: {'Disponible' if prediction.item() >= 0.5 else 'No Disponible'}")
     else:
         st.warning("No se encontraron registros para la sucursal y SKU proporcionados.")
 
