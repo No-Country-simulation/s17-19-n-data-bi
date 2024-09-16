@@ -239,34 +239,66 @@ def mostrar_lógica_farmacéutica():
     elif st.session_state['selected_button'] == 'ANÁLISIS INTEGRAL':
         st.title("Distribuciones y Análisis")
         
-        def mostrar_dashboard(title, url, width=900, height=700):
-            """
-            Función para mostrar un dashboard de Power BI embebido en Streamlit.
-            
-            :param title: Título del dashboard
-            :param url: URL del dashboard
-            :param width: Ancho del iframe
-            :param height: Alto del iframe
-            """
-            st.markdown(f"### {title}")
-            components.html(
-                f"""
-                <iframe width="{width}" height="{height}" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
-                """,
-                height=height,
-            )
-            st.markdown("---")  # Separador
+
+    # Botón para descargar el informe EDA
+    if st.button('DESCARGAR INFORME EDA'):
+        # Cambiar la página para mostrar el informe EDA
+        st.session_state['selected_button'] = 'DESCARGAR_INFORME'
+
+    def mostrar_dashboard(title, url, width=900, height=700):
+        """
+        Función para mostrar un dashboard de Power BI embebido en Streamlit.
         
-        # Listas de títulos y URLs
-        titles = ["Análisis de Productos, Riesgo y Cobertura", "Análisis por Sucursales, de Consumo de Producto y Tendencias"]
-        powerbi_urls = [
-            "https://app.powerbi.com/view?r=eyJrIjoiMzM3M2U1MWUtYTM3OS00YjY5LTljMzYtZjNhMjUzNWQ3Mzk5IiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9", 
-            "https://app.powerbi.com/view?r=eyJrIjoiOWJiNDYyOGMtNzE2OS00NjhkLTgxMTUtMjc0NmY4M2RhYzRkIiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
-        ]
-        
-        # Mostrar los dashboards con mayor altura para que ambos se rendericen correctamente
-        for title, url in zip(titles, powerbi_urls):
-            mostrar_dashboard(title, url, width=900, height=700)
+        :param title: Título del dashboard
+        :param url: URL del dashboard
+        :param width: Ancho del iframe
+        :param height: Alto del iframe
+        """
+        st.markdown(f"### {title}")
+        components.html(
+            f"""
+            <iframe width="{width}" height="{height}" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
+            """,
+            height=height,
+        )
+        st.markdown("---")  # Separador
+    
+    # Listas de títulos y URLs
+    titles = ["Análisis de Productos, Riesgo y Cobertura", "Análisis por Sucursales, de Consumo de Producto y Tendencias"]
+    powerbi_urls = [
+        "https://app.powerbi.com/view?r=eyJrIjoiMzM3M2U1MWUtYTM3OS00YjY5LTljMzYtZjNhMjUzNWQ3Mzk5IiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9", 
+        "https://app.powerbi.com/view?r=eyJrIjoiOWJiNDYyOGMtNzE2OS00NjhkLTgxMTUtMjc0NmY4M2RhYzRkIiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
+    ]
+    
+    # Mostrar los dashboards con mayor altura para que ambos se rendericen correctamente
+    for title, url in zip(titles, powerbi_urls):
+        mostrar_dashboard(title, url, width=900, height=700)
+
+# Página del informe EDA
+elif st.session_state['selected_button'] == 'DESCARGAR_INFORME':
+    st.title("Informe de Análisis Exploratorio de Datos (EDA)")
+    
+    # Mostrar el contenido del informe
+    st.markdown("""
+    El presente informe tiene como objetivo proporcionar una visión clara y detallada del estado actual de los datos disponibles en las áreas de productos, sucursales, usuarios, y transacciones. A través de un análisis exploratorio de datos (EDA), buscamos descubrir patrones, relaciones clave y comportamientos ocultos que permitirán una toma de decisiones más informada y estratégicamente alineada con los objetivos comerciales de la empresa.
+
+    El análisis abarca diversas perspectivas, desde la identificación de productos más vendidos y su distribución por sucursal hasta el perfil demográfico de los usuarios que adquieren estos productos. Asimismo, se exploran relaciones entre las características de los productos, su demanda en diferentes zonas geográficas y los operadores a cargo de las sucursales. Este enfoque multidimensional no solo revelará oportunidades para optimizar el portafolio de productos y mejorar la experiencia del cliente, sino que también facilitará la identificación de áreas donde se pueden implementar mejoras operativas y comerciales.
+
+    Al poner en contexto estos datos, el informe proporcionará insights valiosos que ayudarán a la organización a prever tendencias, identificar posibles desafíos y aprovechar oportunidades de crecimiento, basándose en un análisis sólido y respaldado por datos. La claridad y precisión de los hallazgos permitirán a los directivos y stakeholders tomar decisiones estratégicas con mayor confianza y precisión.
+    """)
+
+    # Botón para descargar el archivo del informe
+    with open("data_analysis_bi/etl_borrador/_pycache/Informe_EDA.ipynb", "rb") as file:
+        st.download_button(
+            label="DESCARGAR",
+            data=file,
+            file_name="Informe_EDA.ipynb",
+            mime="application/octet-stream"
+        )
+    
+    # Botón para volver a la página de "ANÁLISIS INTEGRAL"
+    if st.button("VOLVER"):
+        st.session_state['selected_button'] = 'ANÁLISIS INTEGRAL'
         
 
 # Función para suscribir al cliente al newsletter
