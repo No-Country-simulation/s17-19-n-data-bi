@@ -1,4 +1,3 @@
-
 import pandas as pd
 import streamlit as st
 import torch
@@ -11,6 +10,9 @@ def preprocess_input_data(stock_data, id_sucursal, skuagr_2):
         (stock_data['id_sucursal'] == id_sucursal) & 
         (stock_data['skuagr_2'] == skuagr_2)
     ]
+    
+    # Debugging: Mostrar los datos filtrados
+    st.write("Datos filtrados:", filtered_data)
 
     # Verificar si existen los datos filtrados
     if filtered_data.empty:
