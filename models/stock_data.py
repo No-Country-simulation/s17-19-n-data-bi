@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def load_stock_data():
     # Cargar datos desde los archivos Parquet
