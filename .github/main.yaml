@@ -47,8 +47,3 @@ jobs:
         mkdir -p ~/.streamlit/
         echo "[secrets]" > ~/.streamlit/secrets.toml
         echo "GEMINI_API_KEY=\"${{ secrets.GEMINI_API_KEY }}\"" >> ~/.streamlit/secrets.toml
-
-    - name: Run Streamlit app
-      env:
-        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      run: streamlit run streamlit_app.py  # Ejecuta la aplicación Streamlit
