@@ -57,7 +57,7 @@ def show_stock_result(stock_data, id_sucursal, skuagr_2, model):
     prediction = predict(model, input_tensor)
     
     # Mostrar los resultados
-    st.write(f"Predicción de stock para SKU {skuagr_2} en sucursal {id_sucursal}: {prediction.item()}")
+    st.write(f"Predicción de stock para SKU {skuagr_2} en sucursal {id_sucursal} dentro de los próximos 30 días de acuerdo a la periodicidad de venta, probabilidad de (* 100): {prediction.item()}")
 
 def stock_verification():
     # Cargar los datos una vez
