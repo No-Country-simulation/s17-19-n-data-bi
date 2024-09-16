@@ -5,6 +5,10 @@ from models.inference import load_model, predict
 from models.stock_data import load_stock_data
 
 def preprocess_input_data(stock_data, id_sucursal, skuagr_2):
+    # Convertir los valores de entrada a los tipos correctos
+    id_sucursal = int(id_sucursal.strip())  # Aseguramos que sea un entero y sin espacios
+    skuagr_2 = skuagr_2.strip()  # Eliminamos posibles espacios en blanco
+
     # Filtrar los datos correctamente utilizando el DataFrame cargado
     filtered_data = stock_data[
         (stock_data['id_sucursal'] == id_sucursal) & 
