@@ -288,7 +288,7 @@ def mostrar_lógica_farmacéutica():
         """)
     
         # Botón para descargar el archivo del informe
-        with open("data_analysis_bi/etl_borrador/_pycache/Informe_EDA.ipynb", "rb") as file:
+        with open("data_anlysis_bi/etl_borrador/_pycache/Informe_EDA.ipynb", "rb") as file:
             st.download_button(
                 label="DESCARGAR",
                 data=file,
