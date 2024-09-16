@@ -46,8 +46,15 @@ def show_stock_result(stock_data, id_sucursal, skuagr_2, model):
     if input_data.shape[1] != expected_columns:
         raise ValueError(f"El número de características de input_data ({input_data.shape[1]}) no coincide con el esperado por el modelo ({expected_columns})")
 
+    # Verificar si input_data está vacío antes de convertirlo en tensor
+    if input_data.empty:
+        raise ValueError("Los datos de entrada están vacíos, no se puede realizar la predicción.")
+    
+    # Convertir input_data en tensor
+    input_tensor = torch.tensor(input_data.values).float()
+
     # Realizar la predicción usando el modelo
-    prediction = predict(model, torch.tensor(input_data.values).float())
+    prediction = predict(model, input_tensor)
     
     # Mostrar los resultados
     st.write(f"Predicción de stock para SKU {skuagr_2} en sucursal {id_sucursal}: {prediction.item()}")
