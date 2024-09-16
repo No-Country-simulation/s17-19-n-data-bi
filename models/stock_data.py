@@ -6,6 +6,16 @@ def load_stock_data():
     productos = pd.read_parquet('data/Productos.parquet')
     data = pd.read_parquet('data/Data.parquet')
 
+    # Crear la tabla de stock inicial y calcular el stock disponible
+    stock_inicial = pd.merge(sucursales[['id_sucursal']], productos[['skuagr_2']], how='cross')
+    
+    # Asignar un stock inicial aleatorio (mayor de 0) a cada combinación de sucursal y producto
+    # Usamos randint para generar valores aleatorios entre 0 y 30 (ajustar el rango)
+    stock_inicial['stock_inicial'] = np.random.randint(0, 30, size=len(stock_inicial))
+    
+    # Mostrar una vista previa del stock inicial
+    stock_inicial.head()
+    
     # 1. Cruzar las transacciones con las sucursales (por id_sucursal)
     # Verificar si la columna 'id_sucursal' está en data, si no, asignar valores aleatorios
     if 'id_sucursal' not in data.columns:
