@@ -50,10 +50,10 @@ def load_stock_data():
         stock_actualizado['cantidad_dispensada'] = stock_actualizado['cantidad_dispensada'].fillna(0)
     
         # Calcular el stock disponible restando las dispensas al stock inicial
-        stock_actualizado['stock_disponible'] = stock_actualizado['stock_inicial'] - stock_actualizado['cantidad_dispensada']
+        stock_actualizado['stock_disponible/stock_xencargar'] = stock_actualizado['stock_inicial'] - stock_actualizado['cantidad_dispensada']
     
         # Calcular la variable objetivo 'hay_stock' (si hay o no stock disponible)
-        stock_actualizado['hay_stock'] = (stock_actualizado['stock_disponible'] > 0).astype(int)
+        stock_actualizado['hay_stock'] = (stock_actualizado['stock_disponible/stock_xencargar'] > 0).astype(int)
     else:
         raise KeyError("Error: 'id_sucursal' o 'skuagr_2' no se encuentran en el dataset 'stock_inicial'.")
     
@@ -73,7 +73,7 @@ def load_stock_data():
         stock_actualizado['prevision_30_dias'] = stock_actualizado['promedio_diario'] * 30
     
         # Calcular el stock futuro: stock disponible menos lo que se espera dispensar en 30 días
-        stock_actualizado['stock_futuro'] = stock_actualizado['stock_disponible'] - stock_actualizado['prevision_30_dias']
+        stock_actualizado['stock_futuro'] = stock_actualizado['stock_disponible/stock_xencargar'] - stock_actualizado['prevision_30_dias']
     
         # Calcular si habrá stock en 30 días
         stock_actualizado['hay_stock_30_dias'] = (stock_actualizado['stock_futuro'] > 0).astype(int)
