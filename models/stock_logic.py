@@ -23,7 +23,7 @@ def preprocess_input_data(stock_data, id_sucursal, skuagr_2):
         raise ValueError(f"No se encontraron datos para id_sucursal {id_sucursal} y skuagr_2 {skuagr_2}")
     
     # Usar las columnas calculadas en 'stock_data.py' como 'stock_disponible' y 'hay_stock'
-    input_data = filtered_data[['stock_disponible', 'hay_stock']]
+    input_data = filtered_data[['stock_disponible/stock_xencargar', 'hay_stock']]
 
     # Crear variables dummy para coincidir con el preprocesamiento del modelo
     input_data = pd.get_dummies(input_data, drop_first=True)
@@ -58,7 +58,7 @@ def show_stock_result(stock_data, id_sucursal, skuagr_2, model):
     
     # Mostrar los resultados
     st.write(f"Predicción de stock para SKU {skuagr_2} en sucursal {id_sucursal} dentro de los próximos 30 días de acuerdo a la periodicidad de venta, probabilidad de (* 100): {prediction.item()}")
-    st.write(f"NOTA: El stock_disponible en negativo, indica pedidos/encargos de medicamento/producto realizadas por clientes.")
+    st.write(f"NOTA: El stock_disponible/stock_xencargar en negativo, indica pedidos/encargos de medicamento/producto realizadas por clientes.")
 
 
 def stock_verification():
