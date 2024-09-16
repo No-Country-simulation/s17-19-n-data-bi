@@ -21,7 +21,7 @@ def preprocess_input_data(stock_data, id_sucursal, skuagr_2):
         return None
 
     # Usar las columnas calculadas en 'stock_data.py' como 'stock_disponible' y 'hay_stock'
-    input_data = filtered_data[['stock_disponible', 'hay_stock']]
+    input_data = filtered_data[['stock_disponible/stock_xencargar', 'hay_stock']]
 
     # Crear variables dummy para coincidir con el preprocesamiento del modelo
     input_data = pd.get_dummies(input_data, drop_first=True)
@@ -56,9 +56,6 @@ def show_stock_result(stock_data, id_sucursal, skuagr_2, model):
     # Mostrar solo si el producto está disponible o no, sin tabla
     disponibilidad = "Disponible" if prediction.item() >= 0.5 else "No Disponible"
     st.success(f"El producto con SKU {skuagr_2} en la sucursal {id_sucursal} está: {disponibilidad}")
-
-    # Mostrar una nota si es necesario
-    st.info("NOTA: Si el stock disponible es negativo, indica pedidos/encargos de medicamento/producto realizadas por clientes.")
 
 def stock_verification():
     # Cargar los datos una vez
