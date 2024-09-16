@@ -14,17 +14,18 @@ def preprocess_input_data(stock_data, id_sucursal, skuagr_2):
         (stock_data['id_sucursal'] == id_sucursal) & 
         (stock_data['skuagr_2'] == skuagr_2)
     ]
-    
+
     # Verificar si existen los datos filtrados
     if filtered_data.empty:
-        raise ValueError(f"No se encontraron datos para id_sucursal {id_sucursal} y skuagr_2 {skuagr_2}")
-    
+        st.error(f"No se encontraron datos para Sucursal: {id_sucursal} y SKU: {skuagr_2}")
+        return None
+
     # Usar las columnas calculadas en 'stock_data.py' como 'stock_disponible' y 'hay_stock'
     input_data = filtered_data[['stock_disponible', 'hay_stock']]
 
     # Crear variables dummy para coincidir con el preprocesamiento del modelo
     input_data = pd.get_dummies(input_data, drop_first=True)
-    
+
     # Asegurarse de que el número de columnas coincida con lo esperado por el modelo
     if input_data.shape[1] < 1995:  # Asumimos que el modelo espera 1995 características
         missing_cols = 1995 - input_data.shape[1]
@@ -35,32 +36,29 @@ def preprocess_input_data(stock_data, id_sucursal, skuagr_2):
     return input_data
 
 def show_stock_result(stock_data, id_sucursal, skuagr_2, model):
-    # Filtrar los datos correctamente
-    filtered_data = stock_data[
-        (stock_data['id_sucursal'] == id_sucursal) & 
-        (stock_data['skuagr_2'] == skuagr_2)
-    ]
+    # Preprocesar los datos para la inferencia
+    input_data = preprocess_input_data(stock_data, id_sucursal, skuagr_2)
+    if input_data is None:
+        return
 
-    # Mostrar el resultado o un mensaje si no se encuentra nada
-    if not filtered_data.empty:
-        st.write("Producto disponible.") if filtered_data['hay_stock'].iloc[0] == 1 else st.write("Producto no disponible.")
-        
-        # Preprocesar los datos para la inferencia
-        input_data = preprocess_input_data(stock_data, id_sucursal, skuagr_2)
+    # Verificar que las columnas de entrada coincidan con lo que espera el modelo
+    expected_columns = model.fc1.in_features
+    if input_data.shape[1] != expected_columns:
+        st.error(f"El número de características de input_data ({input_data.shape[1]}) no coincide con lo esperado por el modelo ({expected_columns})")
+        return
 
-        expected_columns = model.fc1.in_features
-        if input_data.shape[1] != expected_columns:
-            raise ValueError(f"El número de características de input_data ({input_data.shape[1]}) no coincide con lo esperado ({expected_columns}).")
-        
-        # Convertir a tensores y hacer la predicción
-        input_tensor = torch.tensor(input_data.values).float()
-        with torch.no_grad():
-            prediction = predict(model, input_tensor)
+    # Convertir input_data en tensor
+    input_tensor = torch.tensor(input_data.values).float()
 
-        # Mostrar la predicción de disponibilidad futura
-        st.write(f"Predicción de disponibilidad futura: {'Disponible' if prediction.item() >= 0.5 else 'No Disponible'}")
-    else:
-        st.warning("No se encontraron registros para la sucursal y SKU proporcionados.")
+    # Realizar la predicción usando el modelo
+    prediction = predict(model, input_tensor)
+
+    # Mostrar solo si el producto está disponible o no, sin tabla
+    disponibilidad = "Disponible" if prediction.item() >= 0.5 else "No Disponible"
+    st.success(f"El producto con SKU {skuagr_2} en la sucursal {id_sucursal} está: {disponibilidad}")
+
+    # Mostrar una nota si es necesario
+    st.info("NOTA: Si el stock disponible es negativo, indica pedidos/encargos de medicamento/producto realizadas por clientes.")
 
 def stock_verification():
     # Cargar los datos una vez
@@ -80,7 +78,7 @@ def stock_verification():
     # Verificar si se han ingresado datos válidos y mostrar resultados
     if submit_button:
         if id_sucursal and skuagr_2:
-            st.write("Verificando stock para Sucursal:", id_sucursal, "y SKU:", skuagr_2)
+            st.write(f"Verificando stock para la Sucursal {id_sucursal} y SKU {skuagr_2}...")
             show_stock_result(stock_data, id_sucursal, skuagr_2, model)
         else:
             st.warning("Por favor, ingrese tanto el ID de la sucursal como el SKU del producto.")
