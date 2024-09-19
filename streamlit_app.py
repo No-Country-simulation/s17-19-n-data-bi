@@ -153,33 +153,33 @@ def mostrar_lógica_farmacéutica():
             st.subheader('Previsión Basada en Datos')
         
             def mostrar_dashboard(title, url, width=900, height=700):
-                """
-                Función para mostrar un dashboard de Power BI embebido en Streamlit.
+                        """
+                        Función para mostrar un dashboard de Power BI embebido en Streamlit.
+                        
+                        :param title: Título del dashboard
+                        :param url: URL del dashboard
+                        :param width: Ancho del iframe
+                        :param height: Alto del iframe
+                        """
+                        st.markdown(f"### {title}")
+                        components.html(
+                            f"""
+                            <iframe width="{width}" height="{height}" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
+                            """,
+                            height=height,
+                        )
+                        st.markdown("---")  # Separador
+            
+                # Listas de títulos y URLs
+                titles = ["Reportes Históricos de Ventas y Clientes", "Recuentos por Perfil Terapéutico según Cantidad"]
+                powerbi_urls = [
+                    "https://app.powerbi.com/view?r=eyJrIjoiMWM5MTYzNTgtZjcxZC00ZTJhLTg4YjctOTZjYmVmYWM3MTIzIiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9",
+                    "https://app.powerbi.com/view?r=eyJrIjoiOGQ0M2Y2ZDMtZGEzZC00NjViLWI0MzktMDZiZjU5YzNkMWNmIiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
+                ]
                 
-                :param title: Título del dashboard
-                :param url: URL del dashboard
-                :param width: Ancho del iframe
-                :param height: Alto del iframe
-                """
-                st.markdown(f"### {title}")
-                components.html(
-                    f"""
-                    <iframe width="{width}" height="{height}" src="{url}" frameborder="0" allowFullScreen="true"></iframe>
-                    """,
-                    height=height,
-                )
-                st.markdown("---")  # Separador
-            
-            # Listas de títulos y URLs
-            titles = ["Reportes Históricos"]
-            powerbi_urls = [
-                "https://app.powerbi.com/view?r=eyJrIjoiMWM5MTYzNTgtZjcxZC00ZTJhLTg4YjctOTZjYmVmYWM3MTIzIiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9",
-                "https://app.powerbi.com/view?r=eyJrIjoiOGQ0M2Y2ZDMtZGEzZC00NjViLWI0MzktMDZiZjU5YzNkMWNmIiwidCI6ImE0NDRiYjgyLTYzYjYtNDkxMi05Nzg1LTE5ZDhmODRiNzY3OCIsImMiOjR9"
-            ]
-            
-            # Mostrar los dashboards con mayor altura para que ambos se rendericen correctamente
-            for title, url in zip(titles, powerbi_urls):
-                mostrar_dashboard(title, url, width=900, height=700)
+                # Mostrar los dashboards con mayor altura para que ambos se rendericen correctamente
+                for title, url in zip(titles, powerbi_urls):
+                    mostrar_dashboard(title, url, width=900, height=700)
                         
         if prevision_generativa:
             st.session_state['show_prevision_generativa'] = True
